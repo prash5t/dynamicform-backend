@@ -31,6 +31,15 @@ def validate_json_structure(json_data):
     return True, None
 
 
+def create_error_response(message, field_errors=None):
+    response = {
+        'error': message
+    }
+    if field_errors:
+        response['errors'] = field_errors
+    return jsonify(response)
+
+
 @bp.route('/', methods=['GET'])
 def index():
     forms = Form.query.all()
@@ -40,19 +49,31 @@ def index():
 @bp.route('/forms', methods=['POST'])
 def add_form():
     if 'file' not in request.files:
-        return jsonify({'error': 'No file provided'}), 400
+        return create_error_response(
+            'No file provided',
+            [{'field': 'file', 'message': 'File is required'}]
+        ), 400
 
     file = request.files['file']
     form_name = request.form.get('formName')
 
     if not form_name:
-        return jsonify({'error': 'Form name is required'}), 400
+        return create_error_response(
+            'Form name is required',
+            [{'field': 'formName', 'message': 'Form name is required'}]
+        ), 400
 
     if file.filename == '':
-        return jsonify({'error': 'No selected file'}), 400
+        return create_error_response(
+            'No selected file',
+            [{'field': 'file', 'message': 'Please select a file'}]
+        ), 400
 
     if not allowed_file(file.filename):
-        return jsonify({'error': 'Invalid file type. Only JSON files are allowed'}), 400
+        return create_error_response(
+            'Invalid file type. Only JSON files are allowed',
+            [{'field': 'file', 'message': 'Only JSON files are allowed'}]
+        ), 400
 
     try:
         # Validate JSON structure
@@ -60,7 +81,10 @@ def add_form():
         is_valid, error_message = validate_json_structure(json_data)
 
         if not is_valid:
-            return jsonify({'error': f'Invalid JSON structure: {error_message}'}), 400
+            return create_error_response(
+                f'Invalid JSON structure: {error_message}',
+                [{'field': 'file', 'message': error_message}]
+            ), 400
 
         # Create form record in database
         form = Form(form_name=form_name, form_path='')
@@ -84,10 +108,13 @@ def add_form():
         }), 201
 
     except json.JSONDecodeError:
-        return jsonify({'error': 'Invalid JSON file'}), 400
+        return create_error_response(
+            'Invalid JSON file',
+            [{'field': 'file', 'message': 'File is not a valid JSON'}]
+        ), 400
     except Exception as e:
         db.session.rollback()
-        return jsonify({'error': str(e)}), 500
+        return create_error_response(str(e)), 500
 
 
 @bp.route('/forms/<form_id>', methods=['DELETE'])

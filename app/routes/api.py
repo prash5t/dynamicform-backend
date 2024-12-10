@@ -1,9 +1,18 @@
 from flask import Blueprint, jsonify, current_app
 import os
 import json
-from app.models import Form
+from app.models import db, Form
 
 bp = Blueprint('api', __name__)
+
+
+def create_error_response(message, field_errors=None):
+    response = {
+        'error': message
+    }
+    if field_errors:
+        response['errors'] = field_errors
+    return jsonify(response)
 
 
 @bp.route('/forms', methods=['GET'])
@@ -12,7 +21,7 @@ def get_forms():
         forms = Form.query.all()
         return jsonify([form.to_dict() for form in forms])
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return create_error_response(str(e)), 500
 
 
 @bp.route('/forms/<form_id>', methods=['GET'])
@@ -23,7 +32,10 @@ def get_form(form_id):
             current_app.config['UPLOAD_FOLDER'], form.formPath)
 
         if not os.path.exists(file_path):
-            return jsonify({'error': 'Form template file not found'}), 404
+            return create_error_response(
+                'Form template file not found',
+                [{'field': 'formPath', 'message': 'JSON file is missing'}]
+            ), 404
 
         with open(file_path, 'r') as f:
             form_data = json.load(f)
@@ -31,4 +43,4 @@ def get_form(form_id):
         return jsonify(form_data)
 
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return create_error_response(str(e)), 500
