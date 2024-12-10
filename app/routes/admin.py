@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, jsonify, current_app
+from flask import Blueprint, render_template, request, jsonify, current_app, Response
 from werkzeug.utils import secure_filename
 import os
 import json
@@ -6,6 +6,8 @@ from app.models.form import Form
 from app.models.submission import Submission
 from app.models import db
 import uuid
+import csv
+from io import StringIO
 
 bp = Blueprint('admin', __name__)
 
@@ -260,6 +262,38 @@ def list_submissions(form_id):
             if os.path.exists(file_path):
                 with open(file_path, 'r') as f:
                     submission_data[submission.submissionId] = json.load(f)
+
+        # Check if CSV format is requested
+        if request.args.get('format') == 'csv':
+            # Create CSV file in memory
+            output = StringIO()
+            writer = csv.writer(output)
+
+            # Write headers
+            headers = ['Submitted Date'] + [field['label']
+                                            for field in form_fields]
+            writer.writerow(headers)
+
+            # Write data rows
+            for submission in submissions:
+                row = [submission.submittedDate.strftime('%Y-%m-%d %H:%M:%S')]
+                data = submission_data.get(submission.submissionId, {})
+                for field in form_fields:
+                    value = data.get(field['key'], '')
+                    if field['type'] == 'file' and value:
+                        value = value[0] if isinstance(value, list) else value
+                    row.append(value)
+                writer.writerow(row)
+
+            # Create response
+            output.seek(0)
+            return Response(
+                output.getvalue(),
+                mimetype='text/csv',
+                headers={
+                    'Content-Disposition': f'attachment; filename={form.formName}_submissions.csv'
+                }
+            )
 
         return render_template('admin/submissions.html',
                                form=form,

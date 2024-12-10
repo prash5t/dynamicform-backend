@@ -1,0 +1,44 @@
+{
+  "firstName": "Ram",
+  "lastName": "Bahadur",
+  "gender": "M",
+  "genderDescription": null,
+  "profession": "1",
+  "highestEducation": null,
+  "businessValuation": "1000",
+  "jobTitle": null,
+  "dob": "2000-08-16",
+  "photo": [
+    "/data/user/0/com.example.dynamicform/cache/058259d8-110d-4c0d-9a2f-efd0d929d17b/IMG_20241129_105330.jpg",
+    "/data/user/0/com.example.dynamicform/cache/ec32d63f-87da-48ff-86c0-867bb723855c/\u0928\u0947\u092a\u093e\u0932 \u0938\u0930\u0915\u093e\u0930.png"
+  ],
+  "file": [
+    "/data/user/0/com.example.dynamicform/cache/file_picker/1733828767902/IMG_20241129_105330.jpg",
+    "/data/user/0/com.example.dynamicform/cache/file_picker/1733828776724/Passport Front Photo.jpg"
+  ],
+  "email": "rjrkek@sksksk.wskwl",
+  "phone": "26165656",
+  "hobby": null,
+  "diet": "1",
+  "non-veg": [
+    "1",
+    "0"
+  ],
+  "drinks": "0",
+  "hobbies": [
+    "reading",
+    "gaming"
+  ],
+  "favoriteGames": [
+    "football",
+    "chess"
+  ],
+  "province": "p3",
+  "district": null,
+  "district_p2": null,
+  "district_p3": "lat",
+  "area_lalitpur": "pulchowk",
+  "area_ktm": null,
+  "streetAddress": "djdjdjjd",
+  "postalCode": "144679"
+}

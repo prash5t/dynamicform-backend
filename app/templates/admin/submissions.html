@@ -162,6 +162,27 @@
             font-size: 30px;
             cursor: pointer;
         }
+
+        .action-buttons {
+            margin: 20px 0;
+            text-align: right;
+        }
+        
+        .download-csv-btn {
+            display: inline-block;
+            padding: 8px 16px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            border: none;
+        }
+        
+        .download-csv-btn:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
@@ -170,6 +191,11 @@
         <h1>Submissions for: {{ form.formName }}</h1>
         
         {% if submissions %}
+        <div class="action-buttons">
+            <button onclick="downloadCSV()" class="download-csv-btn">
+                Download CSV
+            </button>
+        </div>
         <div class="submissions-table">
             <table>
                 <thead>
@@ -187,13 +213,15 @@
                         <td class="meta-info">{{ submission.submittedDate.strftime('%Y-%m-%d %H:%M:%S') }}</td>
                         {% for field in form_fields %}
                         <td>
-                            {% if field['type'] == 'file' and submission_data[submission.submissionId][field['key']] %}
-                            <img src="{{ submission_data[submission.submissionId][field['key']][0] }}" 
-                                 alt="Preview" 
-                                 class="image-preview"
-                                 onclick="showImageModal(this.src)">
+                            {% if field['type'] in ['file', 'photo'] and submission_data[submission.submissionId][field['key']] %}
+                                {% set file_paths = submission_data[submission.submissionId][field['key']] %}
+                                {% if file_paths|length > 0 %}
+                                    {{ file_paths|join(', ') }}
+                                {% else %}
+                                    N/A
+                                {% endif %}
                             {% else %}
-                            {{ submission_data[submission.submissionId][field['key']]|default('N/A') }}
+                                {{ submission_data[submission.submissionId][field['key']]|default('N/A') }}
                             {% endif %}
                         </td>
                         {% endfor %}
@@ -254,6 +282,40 @@
             if (event.target == modal) {
                 modal.style.display = "none";
             }
+        }
+
+        function downloadCSV() {
+            // Get table headers (field labels)
+            const headers = Array.from(document.querySelectorAll('th'))
+                .map(th => th.textContent.trim())
+                .filter(header => header !== 'Actions');
+
+            // Get table data
+            const rows = Array.from(document.querySelectorAll('tbody tr')).map(row => {
+                return Array.from(row.querySelectorAll('td'))
+                    .slice(0, -1) // Remove the Actions column
+                    .map(td => td.textContent.trim());
+            });
+
+            // Create CSV content
+            let csvContent = headers.join(',') + '\n';
+            rows.forEach(row => {
+                csvContent += row.map(cell => {
+                    // Escape commas and quotes in cell content
+                    const escaped = cell.replace(/"/g, '""');
+                    return `"${escaped}"`;
+                }).join(',') + '\n';
+            });
+
+            // Create and trigger download
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', `${document.title.split(' - ')[1]}_submissions.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
     </script>
 </body>

@@ -1,0 +1,25 @@
+{
+  "studentFirstName": "rjrkfkd",
+  "studentLastName": "fjfjffj",
+  "dateOfBirth": "2020-12-31",
+  "gender": "male",
+  "genderDescription": null,
+  "studentPhoto": [
+    "/data/user/0/com.example.dynamicform/cache/bb8aa3ce-db99-4d14-88c9-6c25ebb0f64d/Screenshot_20241105-111326.jpg"
+  ],
+  "guardianType": "parent",
+  "guardianFirstName": "dkdkdkd",
+  "guardianLastName": "fmfmdmf",
+  "guardianRelationship": "father",
+  "guardianOtherRelationship": null,
+  "guardianContactNumber": "4 4 5959464959",
+  "guardianEmail": "jsjsjs@sksks.wkskke",
+  "hasPreviousSchool": "no",
+  "previousSchoolName": null,
+  "previousSchoolAddress": null,
+  "previousGradeCompleted": null,
+  "addressLine1": "fjdjfjdj",
+  "city": "fjfjkffj",
+  "state": "state3",
+  "postalCode": "djdjdjdndndn"
+}

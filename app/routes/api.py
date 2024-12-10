@@ -150,8 +150,6 @@ def validate_submission(template, submission_data):
                     return False, f"Field '{field['label']}' must be text"
                 if 'minLength' in validation and len(value) < validation['minLength']:
                     return False, f"Field '{field['label']}' is too short"
-                if 'maxLength' in validation and len(value) > validation['maxLength']:
-                    return False, f"Field '{field['label']}' is too long"
 
             elif field['type'] in ['radio', 'dropdown']:
                 valid_values = [opt['value'] for opt in field['options']]
@@ -160,7 +158,6 @@ def validate_submission(template, submission_data):
 
             elif field['type'] == 'date':
                 try:
-                    # Convert date string to datetime object
                     from datetime import datetime
                     date_value = datetime.strptime(value, '%Y-%m-%d')
 
@@ -178,6 +175,24 @@ def validate_submission(template, submission_data):
 
                 except ValueError:
                     return False, f"Invalid date format in field '{field['label']}'. Use YYYY-MM-DD format"
+
+            elif field['type'] in ['file', 'photo']:
+                # Both file and photo fields should be lists of file paths
+                if not isinstance(value, list):
+                    return False, f"Field '{field['label']}' must be a list of file paths"
+
+                for path in value:
+                    if not isinstance(path, str):
+                        return False, f"File paths in field '{field['label']}' must be strings"
+                    # Ensure it's a raw file path
+                    if path.startswith('http://') or path.startswith('https://'):
+                        return False, f"Field '{field['label']}' must contain raw file paths, not URLs"
+
+                # Check count constraints if specified
+                if 'minCount' in validation and len(value) < validation['minCount']:
+                    return False, f"Field '{field['label']}' requires at least {validation['minCount']} files"
+                if 'maxCount' in validation and len(value) > validation['maxCount']:
+                    return False, f"Field '{field['label']}' cannot have more than {validation['maxCount']} files"
 
         return True, None
 
