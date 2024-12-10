@@ -1,0 +1,279 @@
+{
+  "formId": "school_admission_form",
+  "formName": "School Admission Form",
+  "pages": [
+    {
+      "title": "Student Information",
+      "fields": [
+        {
+          "key": "studentFirstName",
+          "type": "text",
+          "label": "Student First Name",
+          "validation": {
+            "required": true,
+            "minLength": 2,
+            "maxLength": 30,
+            "inputType": "text",
+            "requiredMessage": "Please enter the student's first name",
+            "minLengthMessage": "First name must be at least 2 characters long",
+            "maxLengthMessage": "First name cannot exceed 30 characters"
+          }
+        },
+        {
+          "key": "studentLastName",
+          "type": "text",
+          "label": "Student Last Name",
+          "validation": {
+            "required": true,
+            "minLength": 2,
+            "maxLength": 30,
+            "inputType": "text",
+            "requiredMessage": "Please enter the student's last name",
+            "minLengthMessage": "Last name must be at least 2 characters long",
+            "maxLengthMessage": "Last name cannot exceed 30 characters"
+          }
+        },
+        {
+          "key": "dateOfBirth",
+          "type": "date",
+          "label": "Date of Birth",
+          "validation": {
+            "required": true,
+            "startDate": "2000-01-01T00:00:00Z",
+            "endDate": "2020-12-31T00:00:00Z",
+            "requiredMessage": "Please enter the student's date of birth"
+          }
+        },
+        {
+          "key": "gender",
+          "type": "radio",
+          "label": "Gender",
+          "options": [
+            { "display": "Male", "value": "male" },
+            { "display": "Female", "value": "female" },
+            { "display": "Other", "value": "other" }
+          ],
+          "validation": { "required": true }
+        },
+        {
+          "key": "genderDescription",
+          "type": "text",
+          "label": "Specify Gender",
+          "dependency": { "field": "gender", "value": "other" },
+          "validation": {
+            "required": true,
+            "minLength": 2,
+            "maxLength": 50,
+            "inputType": "text",
+            "requiredMessage": "Please specify the student's gender"
+          }
+        },
+        {
+          "key": "studentPhoto",
+          "type": "photo",
+          "label": "Student Photo",
+          "validation": {
+            "required": true,
+            "maxSizeInMB": 2.0,
+            "allowedExtensions": ["jpg", "jpeg", "png"],
+            "requiredMessage": "Please upload the student's photo",
+            "maxSizeMessage": "Photo size cannot exceed 2MB",
+            "allowedExtensionsMessage": "Only JPG, JPEG, or PNG files are allowed"
+          }
+        }
+      ]
+    },
+    {
+      "title": "Parent/Guardian Information",
+      "fields": [
+        {
+          "key": "guardianType",
+          "type": "radio",
+          "label": "Guardian Type",
+          "options": [
+            { "display": "Parent", "value": "parent" },
+            { "display": "Legal Guardian", "value": "guardian" }
+          ],
+          "validation": { "required": true }
+        },
+        {
+          "key": "guardianFirstName",
+          "type": "text",
+          "label": "Guardian First Name",
+          "validation": {
+            "required": true,
+            "minLength": 2,
+            "maxLength": 30,
+            "requiredMessage": "Please enter the guardian's first name"
+          }
+        },
+        {
+          "key": "guardianLastName",
+          "type": "text",
+          "label": "Guardian Last Name",
+          "validation": {
+            "required": true,
+            "minLength": 2,
+            "maxLength": 30,
+            "requiredMessage": "Please enter the guardian's last name"
+          }
+        },
+        {
+          "key": "guardianRelationship",
+          "type": "dropdown",
+          "label": "Relationship to Student",
+          "options": [
+            { "display": "Father", "value": "father" },
+            { "display": "Mother", "value": "mother" },
+            { "display": "Uncle", "value": "uncle" },
+            { "display": "Aunt", "value": "aunt" },
+            { "display": "Other", "value": "other" }
+          ],
+          "validation": {
+            "required": true,
+            "requiredMessage": "Please specify the relationship to the student"
+          }
+        },
+        {
+          "key": "guardianOtherRelationship",
+          "type": "text",
+          "label": "Specify Relationship",
+          "dependency": { "field": "guardianRelationship", "value": "other" },
+          "validation": {
+            "required": true,
+            "minLength": 2,
+            "maxLength": 50,
+            "requiredMessage": "Please specify the relationship"
+          }
+        },
+        {
+          "key": "guardianContactNumber",
+          "type": "text",
+          "label": "Contact Number",
+          "validation": {
+            "required": true,
+            "pattern": "^[0-9]+$",
+            "minLength": 10,
+            "maxLength": 15,
+            "inputType": "number",
+            "requiredMessage": "Please enter the guardian's contact number",
+            "patternMessage": "Contact number must contain only digits"
+          }
+        },
+        {
+          "key": "guardianEmail",
+          "type": "text",
+          "label": "Email Address",
+          "validation": {
+            "required": false,
+            "patternMatch": "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
+            "requiredMessage": "Please enter a valid email address"
+          }
+        }
+      ]
+    },
+    {
+      "title": "Previous School Information",
+      "fields": [
+        {
+          "key": "hasPreviousSchool",
+          "type": "radio",
+          "label": "Previously Attended School?",
+          "options": [
+            { "display": "Yes", "value": "yes" },
+            { "display": "No", "value": "no" }
+          ],
+          "validation": { "required": true }
+        },
+        {
+          "key": "previousSchoolName",
+          "type": "text",
+          "label": "Previous School Name",
+          "dependency": { "field": "hasPreviousSchool", "value": "yes" },
+          "validation": {
+            "required": true,
+            "minLength": 2,
+            "maxLength": 100,
+            "requiredMessage": "Please enter the previous school name"
+          }
+        },
+        {
+          "key": "previousSchoolAddress",
+          "type": "text",
+          "label": "Previous School Address",
+          "dependency": { "field": "hasPreviousSchool", "value": "yes" },
+          "validation": {
+            "required": true,
+            "minLength": 5,
+            "maxLength": 200,
+            "requiredMessage": "Please enter the previous school address"
+          }
+        },
+        {
+          "key": "previousGradeCompleted",
+          "type": "dropdown",
+          "label": "Last Grade Completed",
+          "dependency": { "field": "hasPreviousSchool", "value": "yes" },
+          "options": [
+            { "display": "Kindergarten", "value": "kg" },
+            { "display": "1st Grade", "value": "1" },
+            { "display": "2nd Grade", "value": "2" },
+            { "display": "3rd Grade", "value": "3" }
+          ],
+          "validation": {
+            "required": true,
+            "requiredMessage": "Please select the last grade completed"
+          }
+        }
+      ]
+    },
+    {
+      "title": "Address Information",
+      "fields": [
+        {
+          "key": "addressLine1",
+          "type": "text",
+          "label": "Address Line 1",
+          "validation": {
+            "required": true,
+            "minLength": 5,
+            "maxLength": 100,
+            "requiredMessage": "Please enter your address"
+          }
+        },
+        {
+          "key": "city",
+          "type": "text",
+          "label": "City",
+          "validation": {
+            "required": true,
+            "minLength": 2,
+            "maxLength": 50,
+            "requiredMessage": "Please enter your city"
+          }
+        },
+        {
+          "key": "state",
+          "type": "dropdown",
+          "label": "State",
+          "options": [
+            { "display": "State 1", "value": "state1" },
+            { "display": "State 2", "value": "state2" },
+            { "display": "State 3", "value": "state3" }
+          ],
+          "validation": { "required": true }
+        },
+        {
+          "key": "postalCode",
+          "type": "text",
+          "label": "Postal Code",
+          "validation": {
+            "required": true,
+            "pattern": "^[0-9]{5,6}$",
+            "requiredMessage": "Please enter a valid postal code"
+          }
+        }
+      ]
+    }
+  ]
+}
