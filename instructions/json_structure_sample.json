@@ -1,0 +1,425 @@
+{
+  "formId": "unique_form_id",
+  "formName": "Dynamic Form Sample",
+  "pages": [
+    {
+      "title": "Personal Info",
+      "fields": [
+        {
+          "key": "firstName",
+          "type": "text",
+          "label": "First Name",
+          "validation": {
+            "required": false,
+            "allowPattern": "[a-zA-Z]",
+            "minLength": 2,
+            "maxLength": 20,
+            "inputType": "name",
+            "requiredMessage": "Please enter your first name",
+            "minLengthMessage": "First name must be at least 2 characters long",
+            "maxLengthMessage": "First name cannot exceed 50 characters",
+            "patternMessage": "First name can only contain letters"
+          }
+        },
+        {
+          "key": "lastName",
+          "type": "text",
+          "label": "Last Name",
+          "validation": {
+            "required": true,
+            "pattern": "[a-zA-Z]",
+            "minLength": 2,
+            "maxLength": 20,
+            "inputType": "name",
+            "requiredMessage": "Please enter your last name",
+            "minLengthMessage": "Last name must be at least 2 characters long",
+            "maxLengthMessage": "Last name cannot exceed 50 characters",
+            "patternMessage": "Last name can only contain letters"
+          }
+        },
+        {
+          "key": "gender",
+          "type": "radio",
+          "label": "Gender",
+          "options": [
+            { "display": "Male", "value": "M" },
+            { "display": "Female", "value": "F" },
+            { "display": "Others", "value": "O" }
+          ],
+          "validation": { "required": true }
+        },
+        {
+          "key": "genderDescription",
+          "type": "text",
+          "label": "Please specify your gender",
+          "dependency": { "field": "gender", "value": "O" },
+          "validation": {
+            "required": true,
+            "minLength": 2,
+            "maxLength": 100,
+            "inputType": "text"
+          }
+        },
+        {
+          "key": "profession",
+          "type": "dropdown",
+          "label": "Profession",
+          "options": [
+            { "display": "Student", "value": "0" },
+            { "display": "Business", "value": "1" },
+            { "display": "Job", "value": "2" }
+          ],
+          "validation": { "required": true }
+        },
+        {
+          "key": "highestEducation",
+          "type": "dropdown",
+          "label": "Highest Level of Education",
+          "dependency": {
+            "field": "profession",
+            "value": "0"
+          },
+          "options": [
+            { "display": "High School", "value": "hs" },
+            { "display": "Bachelor's", "value": "bs" },
+            { "display": "Master's", "value": "ms" },
+            { "display": "PhD", "value": "phd" }
+          ],
+          "validation": { "required": true }
+        },
+        {
+          "key": "businessValuation",
+          "type": "text",
+          "label": "Business Valuation ($)",
+          "dependency": {
+            "field": "profession",
+            "value": "1"
+          },
+          "validation": {
+            "required": true,
+            "pattern": "[0-9]",
+            "inputType": "number",
+            "minNumber": 100.0,
+            "maxNumber": 10000000.0,
+            "minNumberMessage": "Business valuation must be at least 100$",
+            "maxNumberMessage": "Business valuation cannot exceed 10,000,000$",
+            "requiredMessage": "Please enter business valuation"
+          }
+        },
+        {
+          "key": "jobTitle",
+          "type": "text",
+          "label": "Job Title",
+          "dependency": {
+            "field": "profession",
+            "value": "2"
+          },
+          "validation": {
+            "required": true,
+            "minLength": 2,
+            "maxLength": 50,
+            "inputType": "text"
+          }
+        },
+        {
+          "key": "dob",
+          "type": "date",
+          "label": "Date of Birth",
+          "validation": {
+            "required": true,
+            "startDate": "1990-01-20T01:01:55.200Z",
+            "endDate": "2019-08-15T12:00:00Z"
+          }
+        },
+        {
+          "key": "photo",
+          "type": "photo",
+          "label": "Passport Photo",
+          "validation": {
+            "required": true,
+            "requiredMessage": "Please upload your passport photo",
+            "maxSizeInMB": 3.0,
+            "maxSizeMessage": "Passport photo cannot exceed 1MB",
+            "minCount": 1,
+            "minCountMessage": "Please upload at least 1 photo",
+            "maxCount": 3,
+            "maxCountMessage": "You can upload maximum 1 photo",
+            "allowedExtensions": ["jpg", "jpeg", "png"],
+            "allowedExtensionsMessage": "Only JPG, JPEG, PNG files are allowed"
+          }
+        },
+        {
+          "key": "file",
+          "type": "file",
+          "label": "Land Ownership Certificate",
+          "validation": {
+            "required": true,
+            "requiredMessage": "Please upload your land ownership certificates",
+            "maxSizeInMB": 3.0,
+            "maxSizeMessage": "One file cannot exceed 20MB",
+            "minCount": 1,
+            "minCountMessage": "Please upload at least 1 file",
+            "maxCount": 5,
+            "maxCountMessage": "You can upload maximum 5 files",
+            "allowedExtensions": ["jpg", "jpeg", "png", "pdf", "mp3"],
+            "allowedExtensionsMessage": "Only  JPEG, JPG, PNG, MP3 and PDF files are allowed"
+          }
+        }
+      ]
+    },
+    {
+      "title": "Contact Info",
+      "fields": [
+        {
+          "key": "email",
+          "type": "text",
+          "label": "Email",
+          "validation": {
+            "required": false,
+            "minLength": 4,
+            "maxLength": 60,
+            "inputType": "email",
+            "patternMatch": "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}",
+            "requiredMessage": "Please enter your email",
+            "minLengthMessage": "Email name must be at least 4 characters long",
+            "maxLengthMessage": "Email cannot exceed 60 characters",
+            "patternMessage": "Please enter a valid email address"
+          }
+        },
+        {
+          "key": "phone",
+          "type": "text",
+          "label": "Phone Number",
+          "validation": {
+            "required": false,
+            "pattern": "[0-9]",
+            "minLength": 5,
+            "maxLength": 15,
+            "inputType": "phone"
+          }
+        }
+      ]
+    },
+    {
+      "title": "Your Preferences",
+      "fields": [
+        {
+          "key": "hobby",
+          "type": "text",
+          "label": "What's your hobby?",
+          "validation": {
+            "required": false,
+            "minLength": 2,
+            "maxLength": 200,
+            "inputType": "multiline"
+          }
+        },
+        {
+          "key": "diet",
+          "type": "dropdown",
+          "label": "Diet",
+          "options": [
+            { "display": "VEG", "value": "0" },
+            { "display": "NON-VEG", "value": "1" }
+          ],
+          "validation": { "required": true }
+        },
+        {
+          "key": "non-veg",
+          "type": "checkbox",
+          "label": "Non-Veg",
+          "dependency": { "field": "diet", "value": "1" },
+          "options": [
+            { "display": "Chicken", "value": "0" },
+            { "display": "Mutton", "value": "1" },
+            { "display": "Fish", "value": "2" },
+            { "display": "Pork", "value": "3" },
+            { "display": "Beef", "value": "4" }
+          ],
+          "validation": {
+            "required": true,
+            "minChecked": 1,
+            "maxChecked": 5,
+            "requiredMessage": "Please select at least one non-veg item",
+            "minCheckedMessage": "Please select at least one non-veg item",
+            "maxCheckedMessage": "You can select maximum 5 non-veg items"
+          }
+        },
+        {
+          "key": "drinks",
+          "type": "radio",
+          "label": "Do you drink?",
+          "options": [
+            { "display": "Yes", "value": "0" },
+            { "display": "No", "value": "1" }
+          ],
+          "validation": { "required": true }
+        },
+        {
+          "key": "hobbies",
+          "type": "checkbox",
+          "label": "What are your hobbies?",
+          "options": [
+            { "display": "Reading", "value": "reading" },
+            { "display": "Gaming", "value": "gaming" },
+            { "display": "Cooking", "value": "cooking" },
+            { "display": "Traveling", "value": "traveling" }
+          ],
+          "validation": {
+            "required": true,
+            "minChecked": 1,
+            "maxChecked": 3,
+            "requiredMessage": "Please select at least one hobby",
+            "minCheckedMessage": "Please select at least one hobby",
+            "maxCheckedMessage": "You can select maximum 3 hobbies"
+          }
+        },
+        {
+          "key": "favoriteGames",
+          "type": "checkbox",
+          "label": "What are your favorite games?",
+          "dependency": { "field": "hobbies", "value": "gaming" },
+          "options": [
+            { "display": "Chess", "value": "chess" },
+            { "display": "Football", "value": "football" },
+            { "display": "Cricket", "value": "cricket" },
+            { "display": "Tennis", "value": "tennis" },
+            { "display": "Basketball", "value": "basketball" }
+          ],
+          "validation": {
+            "required": false,
+            "minChecked": 1,
+            "maxChecked": 2,
+            "requiredMessage": "Please select at least one game",
+            "minCheckedMessage": "Please select at least one game",
+            "maxCheckedMessage": "You can select maximum 2 games"
+          }
+        }
+      ]
+    },
+    {
+      "title": "Address Information",
+      "fields": [
+        {
+          "key": "province",
+          "type": "dropdown",
+          "label": "Province",
+          "options": [
+            { "display": "Province 1", "value": "p1" },
+            { "display": "Province 2", "value": "p2" },
+            { "display": "Bagmati", "value": "p3" }
+          ],
+          "validation": {
+            "required": true,
+            "requiredMessage": "Please select your province"
+          }
+        },
+        {
+          "key": "district",
+          "type": "dropdown",
+          "label": "District",
+          "dependency": { "field": "province", "value": "p1" },
+          "options": [
+            { "display": "Jhapa", "value": "d1a" },
+            { "display": "Illam", "value": "d1b" },
+            { "display": "Taplejung", "value": "d1c" }
+          ],
+          "validation": {
+            "required": true,
+            "requiredMessage": "Please select your district"
+          }
+        },
+        {
+          "key": "district_p2",
+          "type": "dropdown",
+          "label": "District",
+          "dependency": { "field": "province", "value": "p2" },
+          "options": [
+            { "display": "District 2A", "value": "d2a" },
+            { "display": "District 2B", "value": "d2b" },
+            { "display": "District 2C", "value": "d2c" }
+          ],
+          "validation": {
+            "required": true,
+            "requiredMessage": "Please select your district"
+          }
+        },
+        {
+          "key": "district_p3",
+          "type": "dropdown",
+          "label": "District",
+          "dependency": { "field": "province", "value": "p3" },
+          "options": [
+            { "display": "Kathmandu", "value": "ktm" },
+            { "display": "Bhaktapur", "value": "bkt" },
+            { "display": "Lalitpur", "value": "lat" }
+          ],
+          "validation": {
+            "required": true,
+            "requiredMessage": "Please select your district"
+          }
+        },
+        {
+          "key": "area_lalitpur",
+          "type": "dropdown",
+          "label": "Area",
+          "dependency": { "field": "district_p3", "value": "lat" },
+          "options": [
+            { "display": "Kupondol", "value": "kupondol" },
+            { "display": "Bakhundol", "value": "bakhundol" },
+            { "display": "Pulchowk", "value": "pulchowk" }
+          ],
+          "validation": {
+            "required": true,
+            "requiredMessage": "Please select your area"
+          }
+        },
+        {
+          "key": "area_ktm",
+          "type": "dropdown",
+          "label": "Area",
+          "dependency": { "field": "district_p3", "value": "ktm" },
+          "options": [
+            { "display": "Putalisadak", "value": "putalisadak" },
+            { "display": "Dillibazar", "value": "dillibazar" },
+            { "display": "Maitidevi", "value": "maitidevi" }
+          ],
+          "validation": {
+            "required": true,
+            "requiredMessage": "Please select your area"
+          }
+        },
+        {
+          "key": "streetAddress",
+          "type": "text",
+          "label": "Street Address",
+          "validation": {
+            "required": true,
+            "minLength": 5,
+            "maxLength": 200,
+            "inputType": "multiline",
+            "requiredMessage": "Please enter your street address",
+            "minLengthMessage": "Address must be at least 5 characters long",
+            "maxLengthMessage": "Address cannot exceed 200 characters"
+          }
+        },
+        {
+          "key": "postalCode",
+          "type": "text",
+          "label": "Postal Code",
+          "validation": {
+            "required": true,
+            "pattern": "[0-9]",
+            "minLength": 5,
+            "maxLength": 6,
+            "inputType": "number",
+            "requiredMessage": "Please enter postal code",
+            "minLengthMessage": "Postal code must be at least 5 digits",
+            "maxLengthMessage": "Postal code cannot exceed 6 digits",
+            "patternMessage": "Postal code can only contain numbers"
+          }
+        }
+      ]
+    }
+  ]
+}

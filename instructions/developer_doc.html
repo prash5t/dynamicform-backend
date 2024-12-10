@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dynamic Form JSON Structure Documentation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="documentation-container">
+        <nav class="sidebar">
+            <div class="nav-section">
+                <div class="nav-section-title">Getting Started</div>
+                <a href="#basic-structure" class="nav-link">Basic Structure</a>
+                <a href="#field-types" class="nav-link">Field Types</a>
+                <a href="#input-types" class="nav-link">Input Types</a>
+             
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-section-title">Validation</div>
+                <a href="#validation-overview" class="nav-link">Overview</a>
+                <a href="#text-field-validation" class="nav-link sub-nav-link">Text Field</a>
+                <a href="#checkbox-validation" class="nav-link sub-nav-link">Checkbox</a>
+                <a href="#file-photo-validation" class="nav-link sub-nav-link">File/Photo</a>
+                <a href="#date-field-validation" class="nav-link sub-nav-link">Date Field</a>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-section-title">Dependencies</div>
+                <a href="#field-dependencies" class="nav-link">Overview</a>
+                <a href="#single-value-dependencies" class="nav-link sub-nav-link">Single Value</a>
+                <a href="#list-value-dependencies" class="nav-link sub-nav-link">List Value</a>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-section-title">Examples</div>
+                <a href="#complete-example" class="nav-link">Complete Example</a>
+                <a href="#examples" class="nav-link">Other Examples</a>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-section-title">Technical Details</div>
+                <a href="#class-diagram" class="nav-link">Class Diagram</a>
+            </div>
+        </nav>
+
+        <main class="main-content">
+            <h1>Dynamic Form JSON Structure Documentation</h1>
+
+            <section id="basic-structure">
+                <h2>Basic Structure</h2>
+                <p>The form consists of pages, and each page contains multiple fields. Here's the basic structure:</p>
+                <pre>
+{
+    "pages": [
+        {
+            "title": "Page Title",
+            "fields": [
+                // Array of field objects
+            ]
+        }
+    ]
+}
+                </pre>
+            </section>
+
+         
+
+            <section id="field-types">
+                <h2>Field Types and Their Required Properties</h2>
+                <table>
+                    <tr>
+                        <th>Field Type</th>
+                        <th>Required Properties</th>
+                        <th>Optional Properties</th>
+                    </tr>
+                    <tr>
+                        <td>text</td>
+                        <td>key, type, label</td>
+                        <td>validation, dependency</td>
+                    </tr>
+                    <tr>
+                        <td>radio</td>
+                        <td>key, type, label, options</td>
+                        <td>validation, dependency</td>
+                    </tr>
+                    <tr>
+                        <td>dropdown</td>
+                        <td>key, type, label, options</td>
+                        <td>validation, dependency</td>
+                    </tr>
+                    <tr>
+                        <td>checkbox</td>
+                        <td>key, type, label, options</td>
+                        <td>validation, dependency</td>
+                    </tr>
+                    <tr>
+                        <td>date</td>
+                        <td>key, type, label</td>
+                        <td>validation, dependency</td>
+                    </tr>
+                    <tr>
+                        <td>photo</td>
+                        <td>key, type, label</td>
+                        <td>validation, dependency</td>
+                    </tr>
+                    <tr>
+                        <td>file</td>
+                        <td>key, type, label</td>
+                        <td>validation, dependency</td>
+                    </tr>
+                </table>
+            </section>
+
+            <section id="input-types">
+                <h2>Input Types</h2>
+                <p>The following input types are supported for text fields:</p>
+                <table>
+                    <tr>
+                        <th>Input Type</th>
+                        <th>Description</th>
+                        <th>Special Validations</th>
+                    </tr>
+                    <tr>
+                        <td>text</td>
+                        <td>Single line text input</td>
+                        <td>minLength, maxLength, allowPattern</td>
+                    </tr>
+                    <tr>
+                        <td>multiline</td>
+                        <td>Multiple line text input</td>
+                        <td>minLength, maxLength</td>
+                    </tr>
+                    <tr>
+                        <td>number</td>
+                        <td>Numeric input</td>
+                        <td>minNumber, maxNumber</td>
+                    </tr>
+                    <tr>
+                        <td>email</td>
+                        <td>Email address input</td>
+                        <td>patternMatch for email format</td>
+                    </tr>
+                    <tr>
+                        <td>phone</td>
+                        <td>Phone number input</td>
+                        <td>patternMatch for phone format</td>
+                    </tr>
+                    <tr>
+                        <td>password</td>
+                        <td>Password input with hidden text</td>
+                        <td>minLength, patternMatch</td>
+                    </tr>
+                </table>
+            </section>
+
+            <section id="validation-overview">
+                <h2>Validation Overview</h2>
+                <p>The validation property is optional. Fields without validation rules are treated as optional (not required) by default.</p>
+                <p>'allowPattern' is used to allow only the specified pattern while 'patternMatch' can be used for fields like email,
+                phone, url, etc. Only one of the two can be used at a time.</p>
+            </section>
+
+            <section id="text-field-validation">
+                <h2>Text Field Validation</h2>
+                <pre>
+"validation": {
+    "required": true,  // If not specified, defaults to false
+    "minLength": 2,
+    "maxLength": 50,
+    "inputType": "phone|email|password|multiline|url|number|name|address",
+    "patternMatch": "[regex-pattern]",
+    "allowPattern": "[regex-pattern]",
+    "minNumber": 100.00,  // For number input type
+    "maxNumber": 10000.00,  // For number input type
+    "requiredMessage": "Custom error message",
+    "minLengthMessage": "Custom min length message",
+    "maxLengthMessage": "Custom max length message",
+    "patternMessage": "Custom pattern message"
+}
+                </pre>
+            </section>
+
+            <section id="checkbox-validation">
+                <h2>Checkbox Validation</h2>
+                <pre>
+"validation": {
+    "required": true,
+    "minChecked": 1,
+    "maxChecked": 3,
+    "requiredMessage": "Please select at least one option",
+    "minCheckedMessage": "Please select at least {minChecked} options",
+    "maxCheckedMessage": "You can select maximum {maxChecked} options"
+}
+                </pre>
+            </section>
+
+            <section id="file-photo-validation">
+                <h2>File and Photo Validation</h2>
+                <pre>
+"validation": {
+    "required": true,
+    "maxSizeInMB": 3.0,
+    "minCount": 1,
+    "maxCount": 5,
+    "allowedExtensions": ["jpg", "jpeg", "png", "pdf"],
+    "maxSizeMessage": "File cannot exceed {maxSizeInMB}MB",
+    "minCountMessage": "Please upload at least {minCount} file(s)",
+    "maxCountMessage": "You can upload maximum {maxCount} files",
+    "allowedExtensionsMessage": "Only {allowedExtensions} files are allowed"
+}
+                </pre>
+            </section>
+
+            <section id="date-field-validation">
+                <h2>Date Field Validation</h2>
+                <pre>
+"validation": {
+    "required": true,
+    "startDate": "1990-01-20T01:01:55.200Z",  // Minimum allowed date
+    "endDate": "2019-08-15T12:00:00Z",        // Maximum allowed date
+    "requiredMessage": "Please select a date"
+}
+                </pre>
+            </section>
+
+            <section id="field-dependencies">
+                <h2>Field Dependencies</h2>
+                <p>Fields can be configured to show or hide based on values of other fields. This enables creating dynamic, interactive forms.</p>
+                
+                <section id="single-value-dependencies">
+                    <h3>Single Value Dependencies</h3>
+                    <p>Used when a field should appear based on a specific value from a radio button or dropdown.</p>
+                    <pre>
+"dependency": {
+    "field": "gender",  // Key of the field this depends on
+    "value": "O"       // Value that triggers this field to show
+}
+                    </pre>
+                    <div class="note">
+                        <strong>Example:</strong>
+                        <p>Show "Gender Description" field when Gender is "Others"</p>
+                    </div>
+                </section>
+
+                <section id="list-value-dependencies">
+                    <h3>List Value Dependencies</h3>
+                    <p>Used when a field should appear based on a value being present in a checkbox selection.</p>
+                    <pre>
+"dependency": {
+    "field": "hobbies",    // Key of the checkbox field
+    "value": "gaming"      // If this value is selected, show the field
+}
+                    </pre>
+                    <div class="note">
+                        <strong>Example:</strong>
+                        <p>Show "Favorite Games" field when "Gaming" is selected in Hobbies</p>
+                    </div>
+                </section>
+            </section>
+
+            <section id="examples">
+                <h2>Examples</h2>
+
+                <h3>Text Field with Email Validation</h3>
+                <pre>
+{
+    "key": "email",
+    "type": "text",
+    "label": "Email Address",
+    "validation": {
+        "required": true,
+        "inputType": "email",
+        "patternMatch": "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}",
+        "patternMessage": "Please enter a valid email address"
+    }
+}
+                </pre>
+
+                <h3>Dependent Fields Example</h3>
+                <pre>
+{
+    "key": "profession",
+    "type": "dropdown",
+    "label": "Profession",
+    "options": [
+        {"display": "Student", "value": "0"},
+        {"display": "Business", "value": "1"}
+    ],
+    "validation": {"required": true}
+},
+{
+    "key": "businessValuation",
+    "type": "text",
+    "label": "Business Valuation ($)",
+    "dependency": {
+        "field": "profession",
+        "value": "1"
+    },
+    "validation": {
+        "required": true,
+        "inputType": "number",
+        "minNumber": 100.00,
+        "maxNumber": 10000000.00
+    }
+}
+                </pre>
+
+                <h3>Checkbox with Multiple Selection</h3>
+                <pre>
+{
+    "key": "hobbies",
+    "type": "checkbox",
+    "label": "What are your hobbies?",
+    "options": [
+        {"display": "Reading", "value": "reading"},
+        {"display": "Gaming", "value": "gaming"}
+    ],
+    "validation": {
+        "required": true,
+        "minChecked": 1,
+        "maxChecked": 2
+    }
+}
+                </pre>
+
+                <div class="note">
+                    <strong>Note:</strong> 
+                    <ul>
+                        <li>All validation messages are optional. Default messages will be used if not provided.</li>
+                        <li>Dependencies are evaluated in real-time as users interact with the form.</li>
+                        <li>For checkbox fields, the dependency check looks for the value in the selected options.</li>
+                    </ul>
+                </div>
+
+                <div class="note">
+                    <strong>Additional Notes:</strong> 
+                    <ul>
+                        <li>Date fields use ISO 8601 format (YYYY-MM-DDTHH:mm:ss.sssZ)</li>
+                        <li>File size limits are specified in megabytes (MB)</li>
+                        <li>The 'allowPattern' and 'patternMatch' are mutually exclusive - use only one</li>
+                        <li>Default values for fields can be set through the 'value' property</li>
+                        <li>For checkbox fields, use 'selectedValues' instead of 'value' to get/set values</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section id="complete-example">
+                <h2>Complete JSON Example</h2>
+                <p>Here's a comprehensive example of a dynamic form with multiple pages, various field types, validations, and dependencies:</p>
+                <pre>
+{
+  "pages": [
+    {
+      "title": "Personal Info",
+      "fields": [
+        {
+          "key": "firstName",
+          "type": "text",
+          "label": "First Name",
+          "validation": {
+            "required": false,
+            "allowPattern": "[a-zA-Z]",
+            "minLength": 2,
+            "maxLength": 20,
+            "inputType": "name",
+            "requiredMessage": "Please enter your first name",
+            "minLengthMessage": "First name must be at least 2 characters long",
+            "maxLengthMessage": "First name cannot exceed 50 characters",
+            "patternMessage": "First name can only contain letters"
+          }
+        },
+        {
+          "key": "lastName",
+          "type": "text",
+          "label": "Last Name",
+          "validation": {
+            "required": true,
+            "pattern": "[a-zA-Z]",
+            "minLength": 2,
+            "maxLength": 20,
+            "inputType": "name",
+            "requiredMessage": "Please enter your last name",
+            "minLengthMessage": "Last name must be at least 2 characters long",
+            "maxLengthMessage": "Last name cannot exceed 50 characters",
+            "patternMessage": "Last name can only contain letters"
+          }
+        },
+        {
+          "key": "gender",
+          "type": "radio",
+          "label": "Gender",
+          "options": [
+            {"display": "Male", "value": "M"},
+            {"display": "Female", "value": "F"},
+            {"display": "Others", "value": "O"}
+          ],
+          "validation": {"required": true}
+        },
+        {
+          "key": "genderDescription",
+          "type": "text",
+          "label": "Please specify your gender",
+          "dependency": {"field": "gender", "value": "O"},
+          "validation": {
+            "required": true,
+            "minLength": 2,
+            "maxLength": 100,
+            "inputType": "text"
+          },
+        },
+        {
+          "key": "profession",
+          "type": "dropdown",
+          "label": "Profession",
+          "options": [
+            {"display": "Student", "value": "0"},
+            {"display": "Business", "value": "1"},
+            {"display": "Job", "value": "2"}
+          ],
+          "validation": {"required": true}
+        },
+        {
+          "key": "highestEducation",
+          "type": "dropdown",
+          "label": "Highest Level of Education",
+          "dependency": {
+            "field": "profession",
+            "value": "0" // Student
+          },
+          "options": [
+            {"display": "High School", "value": "hs"},
+            {"display": "Bachelor's", "value": "bs"},
+            {"display": "Master's", "value": "ms"},
+            {"display": "PhD", "value": "phd"}
+          ],
+          "validation": {"required": true}
+        },
+        {
+          "key": "businessValuation",
+          "type": "text",
+          "label": "Business Valuation (\$)",
+          "dependency": {
+            "field": "profession",
+            "value": "1" // Business
+          },
+          "validation": {
+            "required": true,
+            "pattern": "[0-9]",
+            "inputType": "number",
+            "minNumber": 100.00,
+            "maxNumber": 10000000.00,
+            "minNumberMessage": "Business valuation must be at least 100\$",
+            "maxNumberMessage": "Business valuation cannot exceed 10,000,000\$"
+          }
+        },
+        {
+          "key": "jobTitle",
+          "type": "text",
+          "label": "Job Title",
+          "dependency": {
+            "field": "profession",
+            "value": "2" // Job
+          },
+          "validation": {
+            "required": true,
+            "minLength": 2,
+            "maxLength": 50,
+            "inputType": "text"
+          }
+        },
+        {
+          "key": "dob",
+          "type": "date",
+          "label": "Date of Birth",
+          "validation": {
+            "required": true,
+            "startDate": "1990-01-20T01:01:55.200Z",
+            "endDate": "2019-08-15T12:00:00Z",
+          }
+        },
+        {
+          "key": "photo",
+          "type": "photo",
+          "label": "Passport Photo",
+          "validation": {
+            "required": true,
+            "requiredMessage": "Please upload your passport photo",
+            "maxSizeInMB": 3.0,
+            "maxSizeMessage": "Passport photo cannot exceed 1MB",
+            "minCount": 1,
+            "minCountMessage": "Please upload at least 1 photo",
+            "maxCount": 3,
+            "maxCountMessage": "You can upload maximum 1 photo",
+            "allowedExtensions": ["jpg", "jpeg", "png"],
+            "allowedExtensionsMessage": "Only JPG, JPEG, PNG files are allowed"
+          }
+        },
+        {
+          "key": "file",
+          "type": "file",
+          "label": "Land Ownership Certificate",
+          "validation": {
+            "required": true,
+            "requiredMessage": "Please upload your land ownership certificates",
+            "maxSizeInMB": 3.0,
+            "maxSizeMessage": "One file cannot exceed 20MB",
+            "minCount": 1,
+            "minCountMessage": "Please upload at least 1 file",
+            "maxCount": 5,
+            "maxCountMessage": "You can upload maximum 5 files",
+            "allowedExtensions": ["jpg", "jpeg", "png", "pdf", "mp3"],
+            "allowedExtensionsMessage":
+                "Only  JPEG, JPG, PNG, MP3 and PDF files are allowed"
+          }
+        }
+      ]
+    },
+    {
+      "title": "Contact Info",
+      "fields": [
+        {
+          "key": "email",
+          "type": "text",
+          "label": "Email",
+          "validation": {
+            "required": false,
+            "minLength": 4,
+            "maxLength": 60,
+            "inputType": "email",
+            "patternMatch": "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}",
+            "requiredMessage": "Please enter your email",
+            "minLengthMessage": "Email name must be at least 4 characters long",
+            "maxLengthMessage": "Email cannot exceed 60 characters",
+            "patternMessage": "Please enter a valid email address"
+          }
+        },
+        {
+          "key": "phone",
+          "type": "text",
+          "label": "Phone Number",
+          "validation": {
+            "required": false,
+            "pattern": "[0-9]",
+            "minLength": 5,
+            "maxLength": 15,
+            "inputType": "phone"
+          }
+        },
+      ]
+    },
+    {
+      "title": "Your Preferences",
+      "fields": [
+        {
+          "key": "hobby",
+          "type": "text",
+          "label": "What's your hobby?",
+          "validation": {
+            "required": false,
+            "minLength": 2,
+            "maxLength": 200,
+            "inputType": "multiline"
+          }
+        },
+        {
+          "key": "diet",
+          "type": "dropdown",
+          "label": "Diet",
+          "options": [
+            {"display": "VEG", "value": "0"},
+            {"display": "NON-VEG", "value": "1"},
+          ],
+          "validation": {"required": true}
+        },
+        {
+          "key": "non-veg",
+          "type": "checkbox",
+          "label": "Non-Veg",
+          "dependency": {"field": "diet", "value": "1"},
+          "options": [
+            {"display": "Chicken", "value": "0"},
+            {"display": "Mutton", "value": "1"},
+            {"display": "Fish", "value": "2"},
+            {"display": "Pork", "value": "3"},
+            {"display": "Beef", "value": "4"},
+          ],
+          "validation": {
+            "required": true,
+            "minChecked": 1,
+            "maxChecked": 5,
+            "requiredMessage": "Please select at least one non-veg item",
+            "minCheckedMessage": "Please select at least one non-veg item",
+            "maxCheckedMessage": "You can select maximum 5 non-veg items"
+          }
+        },
+        {
+          "key": "drinks",
+          "type": "radio",
+          "label": "Do you drink?",
+          "options": [
+            {"display": "Yes", "value": "0"},
+            {"display": "No", "value": "1"},
+          ],
+          "validation": {"required": true}
+        },
+        {
+          "key": "hobbies",
+          "type": "checkbox",
+          "label": "What are your hobbies?",
+          "options": [
+            {"display": "Reading", "value": "reading"},
+            {"display": "Gaming", "value": "gaming"},
+            {"display": "Cooking", "value": "cooking"},
+            {"display": "Traveling", "value": "traveling"}
+          ],
+          "validation": {
+            "required": true,
+            "minChecked": 1,
+            "maxChecked": 3,
+            "requiredMessage": "Please select at least one hobby",
+            "minCheckedMessage": "Please select at least one hobby",
+            "maxCheckedMessage": "You can select maximum 3 hobbies"
+          }
+        },
+        {
+          "key": "favoriteGames",
+          "type": "checkbox",
+          "label": "What are your favorite games?",
+          "dependency": {"field": "hobbies", "value": "gaming"},
+          "options": [
+            {"display": "Chess", "value": "chess"},
+            {"display": "Football", "value": "football"},
+            {"display": "Cricket", "value": "cricket"},
+            {"display": "Tennis", "value": "tennis"},
+            {"display": "Basketball", "value": "basketball"}
+          ],
+          "validation": {
+            "required": false,
+            "minChecked": 1,
+            "maxChecked": 2,
+            "requiredMessage": "Please select at least one game",
+            "minCheckedMessage": "Please select at least one game",
+            "maxCheckedMessage": "You can select maximum 2 games"
+          }
+        }
+      ]
+    },
+    {
+      "title": "Address Information",
+      "fields": [
+        {
+          "key": "province",
+          "type": "dropdown",
+          "label": "Province",
+          "options": [
+            {"display": "Province 1", "value": "p1"},
+            {"display": "Province 2", "value": "p2"},
+            {"display": "Province 3", "value": "p3"}
+          ],
+          "validation": {
+            "required": true,
+            "requiredMessage": "Please select your province"
+          }
+        },
+        {
+          "key": "district",
+          "type": "dropdown",
+          "label": "District",
+          "dependency": {"field": "province", "value": "p1"},
+          "options": [
+            {"display": "District 1A", "value": "d1a"},
+            {"display": "District 1B", "value": "d1b"},
+            {"display": "District 1C", "value": "d1c"}
+          ],
+          "validation": {
+            "required": true,
+            "requiredMessage": "Please select your district"
+          }
+        },
+        {
+          "key": "district_p2",
+          "type": "dropdown",
+          "label": "District",
+          "dependency": {"field": "province", "value": "p2"},
+          "options": [
+            {"display": "District 2A", "value": "d2a"},
+            {"display": "District 2B", "value": "d2b"},
+            {"display": "District 2C", "value": "d2c"}
+          ],
+          "validation": {
+            "required": true,
+            "requiredMessage": "Please select your district"
+          }
+        },
+        {
+          "key": "district_p3",
+          "type": "dropdown",
+          "label": "District",
+          "dependency": {"field": "province", "value": "p3"},
+          "options": [
+            {"display": "District 3A", "value": "d3a"},
+            {"display": "District 3B", "value": "d3b"},
+            {"display": "District 3C", "value": "d3c"}
+          ],
+          "validation": {
+            "required": true,
+            "requiredMessage": "Please select your district"
+          }
+        },
+        {
+          "key": "area_d1a",
+          "type": "dropdown",
+          "label": "Area",
+          "dependency": {"field": "district", "value": "d1a"},
+          "options": [
+            {"display": "Area 1A-1", "value": "a1a1"},
+            {"display": "Area 1A-2", "value": "a1a2"},
+            {"display": "Area 1A-3", "value": "a1a3"}
+          ],
+          "validation": {
+            "required": true,
+            "requiredMessage": "Please select your area"
+          }
+        },
+        {
+          "key": "area_d1b",
+          "type": "dropdown",
+          "label": "Area",
+          "dependency": {"field": "district", "value": "d1b"},
+          "options": [
+            {"display": "Area 1B-1", "value": "a1b1"},
+            {"display": "Area 1B-2", "value": "a1b2"},
+            {"display": "Area 1B-3", "value": "a1b3"}
+          ],
+          "validation": {
+            "required": true,
+            "requiredMessage": "Please select your area"
+          }
+        },
+        {
+          "key": "streetAddress",
+          "type": "text",
+          "label": "Street Address",
+          "validation": {
+            "required": true,
+            "minLength": 5,
+            "maxLength": 200,
+            "inputType": "multiline",
+            "requiredMessage": "Please enter your street address",
+            "minLengthMessage": "Address must be at least 5 characters long",
+            "maxLengthMessage": "Address cannot exceed 200 characters"
+          }
+        },
+        {
+          "key": "postalCode",
+          "type": "text",
+          "label": "Postal Code",
+          "validation": {
+            "required": true,
+            "pattern": "[0-9]",
+            "minLength": 5,
+            "maxLength": 6,
+            "inputType": "number",
+            "requiredMessage": "Please enter postal code",
+            "minLengthMessage": "Postal code must be at least 5 digits",
+            "maxLengthMessage": "Postal code cannot exceed 6 digits",
+            "patternMessage": "Postal code can only contain numbers"
+          }
+        }
+      ]
+    }
+  ]
+}
+                </pre>
+
+                <div class="note">
+                    <strong>Example Features Demonstrated:</strong>
+                    <ul>
+                        <li>Multiple pages with different purposes</li>
+                        <li>Text fields with various validation rules</li>
+                        <li>Radio buttons with options</li>
+                        <li>Dropdown with dependent fields</li>
+                        <li>Conditional field display based on dependencies</li>
+                        <li>Different input types (text, email, number)</li>
+                        <li>Custom validation messages</li>
+                        <li>Required and optional fields</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section id="class-diagram">
+                <h2>Class Diagram</h2>
+                <div class="class-diagram">
+                    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+                    <script>mermaid.initialize({startOnLoad:true});</script>
+
+                    <div class="mermaid">
+                    classDiagram
+                        class DynamicFormModel {
+                            +List~DynamicPageModel~ pages
+                            +fromJson(Map json)
+                        }
+                        
+                        class DynamicPageModel {
+                            +String pageTitle
+                            +List~DynamicFieldModel~ fields
+                            +fromJson(Map json)
+                            +toJson() Map
+                        }
+                        
+                        class DynamicFieldModel {
+                            +String key
+                            +String value
+                            +List~String~ selectedValues
+                            +FormFieldTypeEnums type
+                            +String label
+                            +List~DynamicOptionToSelectModel~ optionsToSelect
+                            +DynamicFieldValidationModel validationRule
+                            +DynamicFieldDependencyModel dependency
+                            +fromJson(Map json)
+                        }
+                        
+                        class DynamicFieldValidationModel {
+                            +bool isRequired
+                            +String allowPattern
+                            +double minNumber
+                            +double maxNumber
+                            +String patternMatch
+                            +int minLength
+                            +int maxLength
+                            +DateTime startDate
+                            +DateTime endData
+                            +TextInputType inputType
+                            +String requiredMessage
+                            +int minChecked
+                            +int maxChecked
+                            +double maxSizeInMB
+                            +List~String~ allowedExtensions
+                            +fromJson(Map json)
+                            +textFieldValidator(value)
+                            +checkboxValidator(List~String~ values)
+                        }
+                        
+                        class DynamicFieldDependencyModel {
+                            +String field
+                            +String value
+                            +fromJson(Map json)
+                            +toJson() Map
+                        }
+                        
+                        class DynamicOptionToSelectModel {
+                            +String displayValue
+                            +String submitValue
+                            +fromJson(Map json)
+                        }
+
+                        DynamicFormModel "1" *-- "*" DynamicPageModel
+                        DynamicPageModel "1" *-- "*" DynamicFieldModel
+                        DynamicFieldModel "1" *-- "1" DynamicFieldValidationModel
+                        DynamicFieldModel "1" *-- "1" DynamicFieldDependencyModel
+                        DynamicFieldModel "1" *-- "*" DynamicOptionToSelectModel
+                    </div>
+
+                    <h3>Model Relationships</h3>
+                    <ul>
+                        <li><strong>DynamicFormModel</strong> contains multiple <strong>DynamicPageModel</strong></li>
+                        <li><strong>DynamicPageModel</strong> contains multiple <strong>DynamicFieldModel</strong></li>
+                        <li><strong>DynamicFieldModel</strong> can have:
+                            <ul>
+                                <li>One <strong>DynamicFieldValidationModel</strong> (optional)</li>
+                                <li>One <strong>DynamicFieldDependencyModel</strong> (optional)</li>
+                                <li>Multiple <strong>DynamicOptionToSelectModel</strong> (for dropdown, radio, checkbox)</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
+            <section id="best-practices">
+                <h2>Best Practices</h2>
+                <div class="note">
+                    <strong>Form Design Guidelines</strong>
+                    <ul>
+                        <li>Group related fields together on the same page</li>
+                        <li>Use clear, descriptive labels for fields</li>
+                        <li>Provide helpful validation messages</li>
+                        <li>Use appropriate input types for better user experience</li>
+                        <li>Keep dependencies simple and logical</li>
+                        <li>Test forms with different validation scenarios</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section id="error-handling">
+                <h2>Error Handling</h2>
+                <p>The form provides comprehensive error handling for various scenarios:</p>
+                
+                <h3>Validation Errors</h3>
+                <ul>
+                    <li>Required field validation</li>
+                    <li>Length constraints</li>
+                    <li>Pattern matching</li>
+                    <li>File size and type validation</li>
+                    <li>Custom validation messages</li>
+                </ul>
+
+                <h3>File Upload Errors</h3>
+                <ul>
+                    <li>File size exceeded</li>
+                    <li>Invalid file type</li>
+                    <li>Upload count limits</li>
+                    <li>Network errors</li>
+                </ul>
+            </section>
+        </main>
+    </div>
+
+    <a href="#" class="scroll-to-top" id="scrollToTop">↑</a>
+
+    <script>
+        // Show/hide scroll to top button
+        window.onscroll = function() {
+            const scrollButton = document.getElementById('scrollToTop');
+            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                scrollButton.classList.add('visible');
+            } else {
+                scrollButton.classList.remove('visible');
+            }
+        };
+
+        // Smooth scroll for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
