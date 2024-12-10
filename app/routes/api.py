@@ -1,9 +1,11 @@
 from flask import Blueprint, jsonify, current_app, request
 import os
 import json
+from datetime import datetime
 from app.models.form import Form
 from app.models.submission import Submission
 from app.models import db
+import uuid
 
 bp = Blueprint('api', __name__)
 
@@ -74,28 +76,41 @@ def submit_form(form_id):
         if not is_valid:
             return create_error_response(f'Invalid submission: {error_message}'), 400
 
+        # Generate submission ID
+        submission_id = str(uuid.uuid4())
+
         # Create submissions directory if it doesn't exist
         os.makedirs(current_app.config['SUBMISSION_FOLDER'], exist_ok=True)
 
-        # Create submission record
-        submission = Submission(formId=form_id)
-        db.session.add(submission)
-
-        # Save submission data
-        filename = f"{submission.submissionId}.json"
+        # Save submission data with submission ID
+        filename = f"{submission_id}.json"
         file_path = os.path.join(
             current_app.config['SUBMISSION_FOLDER'], filename)
 
-        with open(file_path, 'w') as f:
-            json.dump(submission_data, f, indent=2)
+        try:
+            # Save the file first
+            with open(file_path, 'w') as f:
+                json.dump(submission_data, f, indent=2)
 
-        submission.submissionPath = filename
-        db.session.commit()
+            # Create submission record with the known file path
+            submission = Submission(
+                submissionId=submission_id,
+                formId=form_id,
+                submissionPath=filename
+            )
+            db.session.add(submission)
+            db.session.commit()
 
-        return jsonify({
-            'message': 'Form submitted successfully',
-            'submission': submission.to_dict()
-        }), 201
+            return jsonify({
+                'message': 'Form submitted successfully',
+                'submission': submission.to_dict()
+            }), 201
+
+        except Exception as e:
+            # Clean up the file if database operation fails
+            if os.path.exists(file_path):
+                os.remove(file_path)
+            raise e
 
     except Exception as e:
         db.session.rollback()
@@ -124,6 +139,9 @@ def validate_submission(template, submission_data):
                 return False, f"Missing required field: {field['label']}"
 
             value = submission_data[key]
+            if value is None:  # Skip validation for null values in non-required fields
+                continue
+
             validation = field.get('validation', {})
 
             # Type validation
@@ -142,20 +160,24 @@ def validate_submission(template, submission_data):
 
             elif field['type'] == 'date':
                 try:
-                    date_value = datetime.fromisoformat(
-                        value.replace('Z', '+00:00'))
+                    # Convert date string to datetime object
+                    from datetime import datetime
+                    date_value = datetime.strptime(value, '%Y-%m-%d')
+
                     if 'startDate' in validation:
-                        start_date = datetime.fromisoformat(
-                            validation['startDate'].replace('Z', '+00:00'))
+                        start_date = datetime.strptime(
+                            validation['startDate'].split('T')[0], '%Y-%m-%d')
                         if date_value < start_date:
                             return False, f"Date in field '{field['label']}' is before allowed range"
+
                     if 'endDate' in validation:
-                        end_date = datetime.fromisoformat(
-                            validation['endDate'].replace('Z', '+00:00'))
+                        end_date = datetime.strptime(
+                            validation['endDate'].split('T')[0], '%Y-%m-%d')
                         if date_value > end_date:
                             return False, f"Date in field '{field['label']}' is after allowed range"
+
                 except ValueError:
-                    return False, f"Invalid date format in field '{field['label']}'"
+                    return False, f"Invalid date format in field '{field['label']}'. Use YYYY-MM-DD format"
 
         return True, None
 

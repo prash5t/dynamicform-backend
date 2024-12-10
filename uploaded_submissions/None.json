@@ -1,0 +1,25 @@
+{
+  "studentFirstName": "Prashant",
+  "studentLastName": "Ghimire",
+  "dateOfBirth": "2005-10-31",
+  "gender": "male",
+  "genderDescription": null,
+  "studentPhoto": [
+    "/data/user/0/com.example.dynamicform/cache/e5b87e46-2343-45a8-8d5c-4375c5dbc566/IMG_20241129_105330.jpg"
+  ],
+  "guardianType": "parent",
+  "guardianFirstName": "John",
+  "guardianLastName": "Doe",
+  "guardianRelationship": "other",
+  "guardianOtherRelationship": "Friend",
+  "guardianContactNumber": "9847467584",
+  "guardianEmail": "ram@dkdk.smsks",
+  "hasPreviousSchool": "yes",
+  "previousSchoolName": "iejdjdj",
+  "previousSchoolAddress": "jsjddnjd",
+  "previousGradeCompleted": "3",
+  "addressLine1": "jtfjfj",
+  "city": "jffjfjfj",
+  "state": "state3",
+  "postalCode": "djdjdjdjdjd"
+}
