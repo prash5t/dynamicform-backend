@@ -107,6 +107,21 @@
             border: 1px solid #ebccd1;
             color: #a94442;
         }
+        
+        .view-btn {
+            display: inline-block;
+            padding: 5px 10px;
+            margin-right: 5px;
+            background-color: #28a745;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        .view-btn:hover {
+            background-color: #218838;
+        }
     </style>
 </head>
 <body>
@@ -147,6 +162,7 @@
                     <td>{{ form.formName }}</td>
                     <td>{{ form.uploadedDate.strftime('%Y-%m-%d %H:%M:%S') }}</td>
                     <td>
+                        <a href="/admin/forms/{{ form.formId }}/view" class="view-btn">View</a>
                         <button class="delete-btn" onclick="deleteForm('{{ form.formId }}')">Delete</button>
                     </td>
                 </tr>

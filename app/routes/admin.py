@@ -14,19 +14,62 @@ def allowed_file(filename):
 
 
 def validate_json_structure(json_data):
+    # Check for required top-level fields
     required_fields = {'formName', 'pages'}
-    if not all(field in json_data for field in required_fields):
-        return False, "Missing required fields in JSON structure"
+    missing_fields = required_fields - set(json_data.keys())
+    if missing_fields:
+        return False, f"Missing required top-level fields: {', '.join(missing_fields)}"
 
     if not isinstance(json_data['pages'], list):
-        return False, "'pages' must be an array"
+        return False, "'pages' must be an array, got {type(json_data['pages']).__name__} instead"
 
-    for page in json_data['pages']:
-        if 'title' not in page or 'fields' not in page:
-            return False, "Each page must have 'title' and 'fields'"
+    for page_index, page in enumerate(json_data['pages'], 1):
+        # Check page structure
+        required_page_fields = {'title', 'fields'}
+        missing_page_fields = required_page_fields - set(page.keys())
+        if missing_page_fields:
+            return False, f"Page {page_index} is missing required fields: {', '.join(missing_page_fields)}"
 
         if not isinstance(page['fields'], list):
-            return False, "'fields' must be an array"
+            return False, f"'fields' in page {page_index} must be an array, got {type(page['fields']).__name__} instead"
+
+        # Validate each field in the page
+        for field_index, field in enumerate(page['fields'], 1):
+            required_field_attrs = {'key', 'type', 'label'}
+            missing_field_attrs = required_field_attrs - set(field.keys())
+            if missing_field_attrs:
+                return False, f"Field {field_index} in page {page_index} is missing required attributes: {', '.join(missing_field_attrs)}"
+
+            # Validate field type
+            valid_field_types = {'text', 'number', 'date',
+                                 'dropdown', 'radio', 'checkbox', 'file', 'photo'}
+            if field['type'] not in valid_field_types:
+                return False, f"Invalid field type '{field['type']}' for field '{field['key']}' in page {page_index}. Valid types are: {', '.join(valid_field_types)}"
+
+            # Validate validation rules if present
+            if 'validation' in field:
+                if not isinstance(field['validation'], dict):
+                    return False, f"'validation' for field '{field['key']}' in page {page_index} must be an object"
+
+                # Validate specific rules based on field type
+                if field['type'] in {'text', 'number'}:
+                    if 'minLength' in field['validation'] and not isinstance(field['validation']['minLength'], int):
+                        return False, f"'minLength' for field '{field['key']}' must be an integer"
+                    if 'maxLength' in field['validation'] and not isinstance(field['validation']['maxLength'], int):
+                        return False, f"'maxLength' for field '{field['key']}' must be an integer"
+
+                elif field['type'] in {'dropdown', 'radio'}:
+                    if 'options' not in field:
+                        return False, f"Field '{field['key']}' of type '{field['type']}' must have 'options' array"
+                    if not isinstance(field.get('options', []), list):
+                        return False, f"'options' for field '{field['key']}' must be an array"
+                    for option_index, option in enumerate(field.get('options', []), 1):
+                        if not isinstance(option, dict) or 'display' not in option or 'value' not in option:
+                            return False, f"Option {option_index} in field '{field['key']}' must have 'display' and 'value' properties"
+
+                elif field['type'] in {'file', 'photo'}:
+                    if 'maxSizeInMB' in field['validation'] and not isinstance(field['validation']['maxSizeInMB'], (int, float)):
+                        return False, f"'maxSizeInMB' for field '{field['key']}' must be a number"
 
     return True, None
 
@@ -137,3 +180,26 @@ def delete_form(form_id):
     except Exception as e:
         db.session.rollback()
         return jsonify({'error': str(e)}), 500
+
+
+@bp.route('/forms/<form_id>/view', methods=['GET'])
+def view_form(form_id):
+    try:
+        form = Form.query.get_or_404(form_id)
+        file_path = os.path.join(
+            current_app.config['UPLOAD_FOLDER'], form.formPath)
+
+        if not os.path.exists(file_path):
+            return render_template('admin/error.html',
+                                   message='Form template file not found')
+
+        with open(file_path, 'r') as f:
+            form_data = json.load(f)
+
+        return render_template('admin/view_form.html',
+                               form=form,
+                               form_data=json.dumps(form_data, indent=2))
+
+    except Exception as e:
+        return render_template('admin/error.html',
+                               message=f'Error loading form: {str(e)}')
