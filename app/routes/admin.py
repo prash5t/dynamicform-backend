@@ -2,7 +2,10 @@ from flask import Blueprint, render_template, request, jsonify, current_app
 from werkzeug.utils import secure_filename
 import os
 import json
-from app.models import db, Form
+from app.models.form import Form
+from app.models.submission import Submission
+from app.models import db
+import uuid
 
 bp = Blueprint('admin', __name__)
 
@@ -119,8 +122,19 @@ def add_form():
         ), 400
 
     try:
+        # Read the file content as string first
+        file_content = file.read().decode('utf-8')
+
+        try:
+            # Try to parse the JSON
+            json_data = json.loads(file_content)
+        except json.JSONDecodeError as e:
+            return create_error_response(
+                'Invalid JSON format',
+                [{'field': 'file', 'message': f'JSON parsing error: {str(e)}'}]
+            ), 400
+
         # Validate JSON structure
-        json_data = json.load(file)
         is_valid, error_message = validate_json_structure(json_data)
 
         if not is_valid:
@@ -129,34 +143,42 @@ def add_form():
                 [{'field': 'file', 'message': error_message}]
             ), 400
 
-        # Create form record in database
-        form = Form(form_name=form_name, form_path='')
-        db.session.add(form)
+        # Generate form ID first
+        form_id = str(uuid.uuid4())
+
+        # Create the upload directory if it doesn't exist
+        os.makedirs(current_app.config['UPLOAD_FOLDER'], exist_ok=True)
 
         # Save the JSON file with form ID
-        filename = f"{form.formId}.json"
+        filename = f"{form_id}.json"
         file_path = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
 
-        # Reset file pointer to beginning
-        file.seek(0)
-        file.save(file_path)
+        # Write the validated JSON to file
+        with open(file_path, 'w', encoding='utf-8') as f:
+            json.dump(json_data, f, indent=2)
 
-        # Update form path and commit
-        form.formPath = filename
-        db.session.commit()
+        try:
+            # Create form record in database with the file path
+            form = Form(formId=form_id, formName=form_name, formPath=filename)
+            db.session.add(form)
+            db.session.commit()
 
-        return jsonify({
-            'message': 'Form added successfully',
-            'form': form.to_dict()
-        }), 201
+            return jsonify({
+                'message': 'Form added successfully',
+                'form': form.to_dict()
+            }), 201
 
-    except json.JSONDecodeError:
+        except Exception as db_error:
+            # If database operation fails, clean up the saved file
+            os.remove(file_path)
+            raise db_error
+
+    except UnicodeDecodeError:
         return create_error_response(
-            'Invalid JSON file',
-            [{'field': 'file', 'message': 'File is not a valid JSON'}]
+            'Invalid file encoding',
+            [{'field': 'file', 'message': 'File must be UTF-8 encoded'}]
         ), 400
     except Exception as e:
-        db.session.rollback()
         return create_error_response(str(e)), 500
 
 
@@ -203,3 +225,65 @@ def view_form(form_id):
     except Exception as e:
         return render_template('admin/error.html',
                                message=f'Error loading form: {str(e)}')
+
+
+@bp.route('/forms/<form_id>/submissions')
+def list_submissions(form_id):
+    try:
+        form = Form.query.get_or_404(form_id)
+        submissions = Submission.query.filter_by(formId=form_id)\
+            .order_by(Submission.submittedDate.desc()).all()
+        return render_template('admin/submissions.html', form=form, submissions=submissions)
+    except Exception as e:
+        return render_template('admin/error.html', message=str(e))
+
+
+@bp.route('/submissions/<submission_id>/view')
+def view_submission(submission_id):
+    try:
+        submission = Submission.query.get_or_404(submission_id)
+
+        # Get the submission data file path
+        file_path = os.path.join(
+            current_app.config['SUBMISSION_FOLDER'],
+            submission.submissionPath
+        )
+
+        if not os.path.exists(file_path):
+            return render_template('admin/error.html',
+                                   message='Submission data file not found')
+
+        # Read the submission data
+        with open(file_path, 'r') as f:
+            submission_data = json.load(f)
+
+        return render_template('admin/view_submission.html',
+                               submission=submission,
+                               submission_data=json.dumps(submission_data, indent=2))
+
+    except Exception as e:
+        return render_template('admin/error.html', message=str(e))
+
+
+@bp.route('/submissions/<submission_id>', methods=['DELETE'])
+def delete_submission(submission_id):
+    try:
+        submission = Submission.query.get_or_404(submission_id)
+
+        # Delete the submission file
+        file_path = os.path.join(
+            current_app.config['SUBMISSION_FOLDER'],
+            submission.submissionPath
+        )
+        if os.path.exists(file_path):
+            os.remove(file_path)
+
+        # Delete database record
+        db.session.delete(submission)
+        db.session.commit()
+
+        return jsonify({'message': 'Submission deleted successfully'})
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': str(e)}), 500

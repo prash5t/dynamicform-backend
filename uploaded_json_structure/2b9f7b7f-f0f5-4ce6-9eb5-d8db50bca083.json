@@ -49,17 +49,31 @@
           "type": "radio",
           "label": "Gender",
           "options": [
-            { "display": "Male", "value": "male" },
-            { "display": "Female", "value": "female" },
-            { "display": "Other", "value": "other" }
+            {
+              "display": "Male",
+              "value": "male"
+            },
+            {
+              "display": "Female",
+              "value": "female"
+            },
+            {
+              "display": "Other",
+              "value": "other"
+            }
           ],
-          "validation": { "required": true }
+          "validation": {
+            "required": true
+          }
         },
         {
           "key": "genderDescription",
           "type": "text",
           "label": "Specify Gender",
-          "dependency": { "field": "gender", "value": "other" },
+          "dependency": {
+            "field": "gender",
+            "value": "other"
+          },
           "validation": {
             "required": true,
             "minLength": 2,
@@ -75,7 +89,11 @@
           "validation": {
             "required": true,
             "maxSizeInMB": 2.0,
-            "allowedExtensions": ["jpg", "jpeg", "png"],
+            "allowedExtensions": [
+              "jpg",
+              "jpeg",
+              "png"
+            ],
             "requiredMessage": "Please upload the student's photo",
             "maxSizeMessage": "Photo size cannot exceed 2MB",
             "allowedExtensionsMessage": "Only JPG, JPEG, or PNG files are allowed"
@@ -91,10 +109,18 @@
           "type": "radio",
           "label": "Guardian Type",
           "options": [
-            { "display": "Parent", "value": "parent" },
-            { "display": "Legal Guardian", "value": "guardian" }
+            {
+              "display": "Parent",
+              "value": "parent"
+            },
+            {
+              "display": "Legal Guardian",
+              "value": "guardian"
+            }
           ],
-          "validation": { "required": true }
+          "validation": {
+            "required": true
+          }
         },
         {
           "key": "guardianFirstName",
@@ -123,11 +149,26 @@
           "type": "dropdown",
           "label": "Relationship to Student",
           "options": [
-            { "display": "Father", "value": "father" },
-            { "display": "Mother", "value": "mother" },
-            { "display": "Uncle", "value": "uncle" },
-            { "display": "Aunt", "value": "aunt" },
-            { "display": "Other", "value": "other" }
+            {
+              "display": "Father",
+              "value": "father"
+            },
+            {
+              "display": "Mother",
+              "value": "mother"
+            },
+            {
+              "display": "Uncle",
+              "value": "uncle"
+            },
+            {
+              "display": "Aunt",
+              "value": "aunt"
+            },
+            {
+              "display": "Other",
+              "value": "other"
+            }
           ],
           "validation": {
             "required": true,
@@ -138,7 +179,10 @@
           "key": "guardianOtherRelationship",
           "type": "text",
           "label": "Specify Relationship",
-          "dependency": { "field": "guardianRelationship", "value": "other" },
+          "dependency": {
+            "field": "guardianRelationship",
+            "value": "other"
+          },
           "validation": {
             "required": true,
             "minLength": 2,
@@ -180,16 +224,27 @@
           "type": "radio",
           "label": "Previously Attended School?",
           "options": [
-            { "display": "Yes", "value": "yes" },
-            { "display": "No", "value": "no" }
+            {
+              "display": "Yes",
+              "value": "yes"
+            },
+            {
+              "display": "No",
+              "value": "no"
+            }
           ],
-          "validation": { "required": true }
+          "validation": {
+            "required": true
+          }
         },
         {
           "key": "previousSchoolName",
           "type": "text",
           "label": "Previous School Name",
-          "dependency": { "field": "hasPreviousSchool", "value": "yes" },
+          "dependency": {
+            "field": "hasPreviousSchool",
+            "value": "yes"
+          },
           "validation": {
             "required": true,
             "minLength": 2,
@@ -201,7 +256,10 @@
           "key": "previousSchoolAddress",
           "type": "text",
           "label": "Previous School Address",
-          "dependency": { "field": "hasPreviousSchool", "value": "yes" },
+          "dependency": {
+            "field": "hasPreviousSchool",
+            "value": "yes"
+          },
           "validation": {
             "required": true,
             "minLength": 5,
@@ -213,12 +271,27 @@
           "key": "previousGradeCompleted",
           "type": "dropdown",
           "label": "Last Grade Completed",
-          "dependency": { "field": "hasPreviousSchool", "value": "yes" },
+          "dependency": {
+            "field": "hasPreviousSchool",
+            "value": "yes"
+          },
           "options": [
-            { "display": "Kindergarten", "value": "kg" },
-            { "display": "1st Grade", "value": "1" },
-            { "display": "2nd Grade", "value": "2" },
-            { "display": "3rd Grade", "value": "3" }
+            {
+              "display": "Kindergarten",
+              "value": "kg"
+            },
+            {
+              "display": "1st Grade",
+              "value": "1"
+            },
+            {
+              "display": "2nd Grade",
+              "value": "2"
+            },
+            {
+              "display": "3rd Grade",
+              "value": "3"
+            }
           ],
           "validation": {
             "required": true,
@@ -257,11 +330,22 @@
           "type": "dropdown",
           "label": "State",
           "options": [
-            { "display": "State 1", "value": "state1" },
-            { "display": "State 2", "value": "state2" },
-            { "display": "State 3", "value": "state3" }
+            {
+              "display": "State 1",
+              "value": "state1"
+            },
+            {
+              "display": "State 2",
+              "value": "state2"
+            },
+            {
+              "display": "State 3",
+              "value": "state3"
+            }
           ],
-          "validation": { "required": true }
+          "validation": {
+            "required": true
+          }
         },
         {
           "key": "postalCode",

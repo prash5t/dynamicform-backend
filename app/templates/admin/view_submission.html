@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>View Submission - {{ submission.form.formName }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #666;
+            text-decoration: none;
+        }
+        
+        .back-link:hover {
+            color: #333;
+        }
+        
+        .submission-info {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+        }
+        
+        .submission-info p {
+            margin: 5px 0;
+        }
+        
+        pre {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .navigation-links {
+            margin-bottom: 20px;
+        }
+
+        .navigation-links a {
+            color: #666;
+            text-decoration: none;
+            margin-right: 15px;
+        }
+
+        .navigation-links a:hover {
+            color: #333;
+        }
+
+        .navigation-links span {
+            color: #999;
+            margin: 0 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="navigation-links">
+            <a href="/admin/">Admin Dashboard</a>
+            <span>›</span>
+            <a href="/admin/forms/{{ submission.formId }}/submissions">Form Submissions</a>
+            <span>›</span>
+            <span>View Submission</span>
+        </div>
+
+        <h1>Submission Details</h1>
+        
+        <div class="submission-info">
+            <p><strong>Form Name:</strong> {{ submission.form.formName }}</p>
+            <p><strong>Submission ID:</strong> {{ submission.submissionId }}</p>
+            <p><strong>Submitted Date:</strong> {{ submission.submittedDate.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+        </div>
+        
+        <pre><code>{{ submission_data }}</code></pre>
+    </div>
+</body>
+</html> 

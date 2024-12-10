@@ -42,17 +42,31 @@
           "type": "radio",
           "label": "Gender",
           "options": [
-            { "display": "Male", "value": "M" },
-            { "display": "Female", "value": "F" },
-            { "display": "Others", "value": "O" }
+            {
+              "display": "Male",
+              "value": "M"
+            },
+            {
+              "display": "Female",
+              "value": "F"
+            },
+            {
+              "display": "Others",
+              "value": "O"
+            }
           ],
-          "validation": { "required": true }
+          "validation": {
+            "required": true
+          }
         },
         {
           "key": "genderDescription",
           "type": "text",
           "label": "Please specify your gender",
-          "dependency": { "field": "gender", "value": "O" },
+          "dependency": {
+            "field": "gender",
+            "value": "O"
+          },
           "validation": {
             "required": true,
             "minLength": 2,
@@ -65,11 +79,22 @@
           "type": "dropdown",
           "label": "Profession",
           "options": [
-            { "display": "Student", "value": "0" },
-            { "display": "Business", "value": "1" },
-            { "display": "Job", "value": "2" }
+            {
+              "display": "Student",
+              "value": "0"
+            },
+            {
+              "display": "Business",
+              "value": "1"
+            },
+            {
+              "display": "Job",
+              "value": "2"
+            }
           ],
-          "validation": { "required": true }
+          "validation": {
+            "required": true
+          }
         },
         {
           "key": "highestEducation",
@@ -80,12 +105,26 @@
             "value": "0"
           },
           "options": [
-            { "display": "High School", "value": "hs" },
-            { "display": "Bachelor's", "value": "bs" },
-            { "display": "Master's", "value": "ms" },
-            { "display": "PhD", "value": "phd" }
+            {
+              "display": "High School",
+              "value": "hs"
+            },
+            {
+              "display": "Bachelor's",
+              "value": "bs"
+            },
+            {
+              "display": "Master's",
+              "value": "ms"
+            },
+            {
+              "display": "PhD",
+              "value": "phd"
+            }
           ],
-          "validation": { "required": true }
+          "validation": {
+            "required": true
+          }
         },
         {
           "key": "businessValuation",
@@ -144,7 +183,11 @@
             "minCountMessage": "Please upload at least 1 photo",
             "maxCount": 3,
             "maxCountMessage": "You can upload maximum 1 photo",
-            "allowedExtensions": ["jpg", "jpeg", "png"],
+            "allowedExtensions": [
+              "jpg",
+              "jpeg",
+              "png"
+            ],
             "allowedExtensionsMessage": "Only JPG, JPEG, PNG files are allowed"
           }
         },
@@ -161,7 +204,13 @@
             "minCountMessage": "Please upload at least 1 file",
             "maxCount": 5,
             "maxCountMessage": "You can upload maximum 5 files",
-            "allowedExtensions": ["jpg", "jpeg", "png", "pdf", "mp3"],
+            "allowedExtensions": [
+              "jpg",
+              "jpeg",
+              "png",
+              "pdf",
+              "mp3"
+            ],
             "allowedExtensionsMessage": "Only  JPEG, JPG, PNG, MP3 and PDF files are allowed"
           }
         }
@@ -219,22 +268,48 @@
           "type": "dropdown",
           "label": "Diet",
           "options": [
-            { "display": "VEG", "value": "0" },
-            { "display": "NON-VEG", "value": "1" }
+            {
+              "display": "VEG",
+              "value": "0"
+            },
+            {
+              "display": "NON-VEG",
+              "value": "1"
+            }
           ],
-          "validation": { "required": true }
+          "validation": {
+            "required": true
+          }
         },
         {
           "key": "non-veg",
           "type": "checkbox",
           "label": "Non-Veg",
-          "dependency": { "field": "diet", "value": "1" },
+          "dependency": {
+            "field": "diet",
+            "value": "1"
+          },
           "options": [
-            { "display": "Chicken", "value": "0" },
-            { "display": "Mutton", "value": "1" },
-            { "display": "Fish", "value": "2" },
-            { "display": "Pork", "value": "3" },
-            { "display": "Beef", "value": "4" }
+            {
+              "display": "Chicken",
+              "value": "0"
+            },
+            {
+              "display": "Mutton",
+              "value": "1"
+            },
+            {
+              "display": "Fish",
+              "value": "2"
+            },
+            {
+              "display": "Pork",
+              "value": "3"
+            },
+            {
+              "display": "Beef",
+              "value": "4"
+            }
           ],
           "validation": {
             "required": true,
@@ -250,20 +325,40 @@
           "type": "radio",
           "label": "Do you drink?",
           "options": [
-            { "display": "Yes", "value": "0" },
-            { "display": "No", "value": "1" }
+            {
+              "display": "Yes",
+              "value": "0"
+            },
+            {
+              "display": "No",
+              "value": "1"
+            }
           ],
-          "validation": { "required": true }
+          "validation": {
+            "required": true
+          }
         },
         {
           "key": "hobbies",
           "type": "checkbox",
           "label": "What are your hobbies?",
           "options": [
-            { "display": "Reading", "value": "reading" },
-            { "display": "Gaming", "value": "gaming" },
-            { "display": "Cooking", "value": "cooking" },
-            { "display": "Traveling", "value": "traveling" }
+            {
+              "display": "Reading",
+              "value": "reading"
+            },
+            {
+              "display": "Gaming",
+              "value": "gaming"
+            },
+            {
+              "display": "Cooking",
+              "value": "cooking"
+            },
+            {
+              "display": "Traveling",
+              "value": "traveling"
+            }
           ],
           "validation": {
             "required": true,
@@ -278,13 +373,31 @@
           "key": "favoriteGames",
           "type": "checkbox",
           "label": "What are your favorite games?",
-          "dependency": { "field": "hobbies", "value": "gaming" },
+          "dependency": {
+            "field": "hobbies",
+            "value": "gaming"
+          },
           "options": [
-            { "display": "Chess", "value": "chess" },
-            { "display": "Football", "value": "football" },
-            { "display": "Cricket", "value": "cricket" },
-            { "display": "Tennis", "value": "tennis" },
-            { "display": "Basketball", "value": "basketball" }
+            {
+              "display": "Chess",
+              "value": "chess"
+            },
+            {
+              "display": "Football",
+              "value": "football"
+            },
+            {
+              "display": "Cricket",
+              "value": "cricket"
+            },
+            {
+              "display": "Tennis",
+              "value": "tennis"
+            },
+            {
+              "display": "Basketball",
+              "value": "basketball"
+            }
           ],
           "validation": {
             "required": false,
@@ -305,9 +418,18 @@
           "type": "dropdown",
           "label": "Province",
           "options": [
-            { "display": "Province 1", "value": "p1" },
-            { "display": "Province 2", "value": "p2" },
-            { "display": "Bagmati", "value": "p3" }
+            {
+              "display": "Province 1",
+              "value": "p1"
+            },
+            {
+              "display": "Province 2",
+              "value": "p2"
+            },
+            {
+              "display": "Bagmati",
+              "value": "p3"
+            }
           ],
           "validation": {
             "required": true,
@@ -318,11 +440,23 @@
           "key": "district",
           "type": "dropdown",
           "label": "District",
-          "dependency": { "field": "province", "value": "p1" },
+          "dependency": {
+            "field": "province",
+            "value": "p1"
+          },
           "options": [
-            { "display": "Jhapa", "value": "d1a" },
-            { "display": "Illam", "value": "d1b" },
-            { "display": "Taplejung", "value": "d1c" }
+            {
+              "display": "Jhapa",
+              "value": "d1a"
+            },
+            {
+              "display": "Illam",
+              "value": "d1b"
+            },
+            {
+              "display": "Taplejung",
+              "value": "d1c"
+            }
           ],
           "validation": {
             "required": true,
@@ -333,11 +467,23 @@
           "key": "district_p2",
           "type": "dropdown",
           "label": "District",
-          "dependency": { "field": "province", "value": "p2" },
+          "dependency": {
+            "field": "province",
+            "value": "p2"
+          },
           "options": [
-            { "display": "District 2A", "value": "d2a" },
-            { "display": "District 2B", "value": "d2b" },
-            { "display": "District 2C", "value": "d2c" }
+            {
+              "display": "District 2A",
+              "value": "d2a"
+            },
+            {
+              "display": "District 2B",
+              "value": "d2b"
+            },
+            {
+              "display": "District 2C",
+              "value": "d2c"
+            }
           ],
           "validation": {
             "required": true,
@@ -348,11 +494,23 @@
           "key": "district_p3",
           "type": "dropdown",
           "label": "District",
-          "dependency": { "field": "province", "value": "p3" },
+          "dependency": {
+            "field": "province",
+            "value": "p3"
+          },
           "options": [
-            { "display": "Kathmandu", "value": "ktm" },
-            { "display": "Bhaktapur", "value": "bkt" },
-            { "display": "Lalitpur", "value": "lat" }
+            {
+              "display": "Kathmandu",
+              "value": "ktm"
+            },
+            {
+              "display": "Bhaktapur",
+              "value": "bkt"
+            },
+            {
+              "display": "Lalitpur",
+              "value": "lat"
+            }
           ],
           "validation": {
             "required": true,
@@ -363,11 +521,23 @@
           "key": "area_lalitpur",
           "type": "dropdown",
           "label": "Area",
-          "dependency": { "field": "district_p3", "value": "lat" },
+          "dependency": {
+            "field": "district_p3",
+            "value": "lat"
+          },
           "options": [
-            { "display": "Kupondol", "value": "kupondol" },
-            { "display": "Bakhundol", "value": "bakhundol" },
-            { "display": "Pulchowk", "value": "pulchowk" }
+            {
+              "display": "Kupondol",
+              "value": "kupondol"
+            },
+            {
+              "display": "Bakhundol",
+              "value": "bakhundol"
+            },
+            {
+              "display": "Pulchowk",
+              "value": "pulchowk"
+            }
           ],
           "validation": {
             "required": true,
@@ -378,11 +548,23 @@
           "key": "area_ktm",
           "type": "dropdown",
           "label": "Area",
-          "dependency": { "field": "district_p3", "value": "ktm" },
+          "dependency": {
+            "field": "district_p3",
+            "value": "ktm"
+          },
           "options": [
-            { "display": "Putalisadak", "value": "putalisadak" },
-            { "display": "Dillibazar", "value": "dillibazar" },
-            { "display": "Maitidevi", "value": "maitidevi" }
+            {
+              "display": "Putalisadak",
+              "value": "putalisadak"
+            },
+            {
+              "display": "Dillibazar",
+              "value": "dillibazar"
+            },
+            {
+              "display": "Maitidevi",
+              "value": "maitidevi"
+            }
           ],
           "validation": {
             "required": true,

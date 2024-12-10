@@ -122,6 +122,21 @@
         .view-btn:hover {
             background-color: #218838;
         }
+        
+        .submissions-btn {
+            display: inline-block;
+            padding: 5px 10px;
+            margin-right: 5px;
+            background-color: #17a2b8;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        .submissions-btn:hover {
+            background-color: #138496;
+        }
     </style>
 </head>
 <body>
@@ -163,6 +178,7 @@
                     <td>{{ form.uploadedDate.strftime('%Y-%m-%d %H:%M:%S') }}</td>
                     <td>
                         <a href="/admin/forms/{{ form.formId }}/view" class="view-btn">View</a>
+                        <a href="/admin/forms/{{ form.formId }}/submissions" class="submissions-btn">Submissions</a>
                         <button class="delete-btn" onclick="deleteForm('{{ form.formId }}')">Delete</button>
                     </td>
                 </tr>

@@ -1,24 +1,20 @@
-from datetime import datetime
-from app import db
-import uuid
+from flask_sqlalchemy import SQLAlchemy
+
+db = SQLAlchemy()
+
+# Models will be imported after db is initialized in create_app
+Form = None
+Submission = None
 
 
-class Form(db.Model):
-    __tablename__ = 'forms'
+def init_models():
+    # Import models here to avoid circular imports
+    global Form, Submission
 
-    formId = db.Column(db.String(36), primary_key=True)
-    formName = db.Column(db.String(100), nullable=False)
-    uploadedDate = db.Column(
-        db.DateTime, nullable=False, default=datetime.utcnow)
-    formPath = db.Column(db.String(255), nullable=False)
+    if Form is None:
+        from .form import Form
+    if Submission is None:
+        from .submission import Submission
 
-    def __init__(self, form_name, form_path):
-        self.formId = str(uuid.uuid4())
-        self.formName = form_name
-        self.formPath = form_path
 
-    def to_dict(self):
-        return {
-            'formId': self.formId,
-            'formName': self.formName
-        }
+__all__ = ['db', 'Form', 'Submission']
