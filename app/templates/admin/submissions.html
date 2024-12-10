@@ -88,6 +88,80 @@
             color: #666;
             font-style: italic;
         }
+
+        /* Add new styles for the enhanced table */
+        .submissions-table {
+            overflow-x: auto;
+            margin-top: 20px;
+        }
+        
+        .submissions-table table {
+            min-width: 100%;
+            white-space: nowrap;
+        }
+        
+        .submissions-table th {
+            position: sticky;
+            top: 0;
+            background-color: #f8f9fa;
+            z-index: 1;
+            font-weight: bold;
+            padding: 12px 15px;
+        }
+
+        .submissions-table td {
+            padding: 8px 15px;
+            max-width: 200px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .submissions-table td:hover {
+            white-space: normal;
+            word-wrap: break-word;
+        }
+
+        .meta-info {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .image-preview {
+            max-width: 50px;
+            max-height: 50px;
+            cursor: pointer;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            z-index: 1000;
+        }
+
+        .modal-content {
+            position: relative;
+            margin: auto;
+            padding: 20px;
+            width: 80%;
+            max-width: 700px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .modal-close {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            color: white;
+            font-size: 30px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -96,32 +170,52 @@
         <h1>Submissions for: {{ form.formName }}</h1>
         
         {% if submissions %}
-        <table>
-            <thead>
-                <tr>
-                    <th>Submission ID</th>
-                    <th>Submitted Date</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for submission in submissions %}
-                <tr>
-                    <td>{{ submission.submissionId }}</td>
-                    <td>{{ submission.submittedDate.strftime('%Y-%m-%d %H:%M:%S') }}</td>
-                    <td>
-                        <a href="/admin/submissions/{{ submission.submissionId }}/view" class="view-btn">View</a>
-                        <button class="delete-btn" onclick="deleteSubmission('{{ submission.submissionId }}')">Delete</button>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        <div class="submissions-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th class="meta-info">Submitted Date</th>
+                        {% for field in form_fields %}
+                        <th>{{ field['label'] }}</th>
+                        {% endfor %}
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for submission in submissions %}
+                    <tr>
+                        <td class="meta-info">{{ submission.submittedDate.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                        {% for field in form_fields %}
+                        <td>
+                            {% if field['type'] == 'file' and submission_data[submission.submissionId][field['key']] %}
+                            <img src="{{ submission_data[submission.submissionId][field['key']][0] }}" 
+                                 alt="Preview" 
+                                 class="image-preview"
+                                 onclick="showImageModal(this.src)">
+                            {% else %}
+                            {{ submission_data[submission.submissionId][field['key']]|default('N/A') }}
+                            {% endif %}
+                        </td>
+                        {% endfor %}
+                        <td>
+                            <button class="delete-btn" onclick="deleteSubmission('{{ submission.submissionId }}')">Delete</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
         {% else %}
         <div class="no-submissions">
             No submissions found for this form.
         </div>
         {% endif %}
+    </div>
+
+    <!-- Image Modal -->
+    <div id="imageModal" class="modal">
+        <span class="modal-close" onclick="closeImageModal()">&times;</span>
+        <img id="modalImage" class="modal-content">
     </div>
 
     <script>
@@ -140,6 +234,25 @@
                     console.error('Error:', error);
                     alert('Failed to delete submission');
                 });
+            }
+        }
+
+        function showImageModal(src) {
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalImage');
+            modal.style.display = "block";
+            modalImg.src = src;
+        }
+
+        function closeImageModal() {
+            document.getElementById('imageModal').style.display = "none";
+        }
+
+        // Close modal when clicking outside the image
+        window.onclick = function(event) {
+            const modal = document.getElementById('imageModal');
+            if (event.target == modal) {
+                modal.style.display = "none";
             }
         }
     </script>

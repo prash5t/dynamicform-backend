@@ -233,7 +233,39 @@ def list_submissions(form_id):
         form = Form.query.get_or_404(form_id)
         submissions = Submission.query.filter_by(formId=form_id)\
             .order_by(Submission.submittedDate.desc()).all()
-        return render_template('admin/submissions.html', form=form, submissions=submissions)
+
+        # Load form template to get field definitions
+        template_path = os.path.join(
+            current_app.config['UPLOAD_FOLDER'], form.formPath)
+        with open(template_path, 'r') as f:
+            form_template = json.load(f)
+
+        # Extract all fields from the form template
+        form_fields = []
+        for page in form_template['pages']:
+            for field in page['fields']:
+                form_fields.append({
+                    'key': field['key'],
+                    'label': field['label'],
+                    'type': field['type']
+                })
+
+        # Load submission data
+        submission_data = {}
+        for submission in submissions:
+            file_path = os.path.join(
+                current_app.config['SUBMISSION_FOLDER'],
+                submission.submissionPath
+            )
+            if os.path.exists(file_path):
+                with open(file_path, 'r') as f:
+                    submission_data[submission.submissionId] = json.load(f)
+
+        return render_template('admin/submissions.html',
+                               form=form,
+                               submissions=submissions,
+                               form_fields=form_fields,
+                               submission_data=submission_data)
     except Exception as e:
         return render_template('admin/error.html', message=str(e))
 
