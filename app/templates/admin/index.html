@@ -177,8 +177,8 @@
                     <td>{{ form.formName }}</td>
                     <td>{{ form.uploadedDate.strftime('%Y-%m-%d %H:%M:%S') }}</td>
                     <td>
-                        <a href="/admin/forms/{{ form.formId }}/view" class="view-btn">View</a>
-                        <a href="/admin/forms/{{ form.formId }}/submissions" class="submissions-btn">Submissions</a>
+                        <a href="/admin/forms/{{ form.formId }}/view" class="view-btn">View Form</a>
+                        <a href="/admin/forms/{{ form.formId }}/submissions" class="submissions-btn">View Submissions</a>
                         <button class="delete-btn" onclick="deleteForm('{{ form.formId }}')">Delete</button>
                     </td>
                 </tr>
