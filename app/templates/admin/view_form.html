@@ -54,33 +54,6 @@
             white-space: pre-wrap;
             word-wrap: break-word;
         }
-        
-        .copy-button {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-bottom: 10px;
-        }
-        
-        .copy-button:hover {
-            background-color: #0056b3;
-        }
-        
-        .alert {
-            padding: 10px;
-            margin: 10px 0;
-            border-radius: 4px;
-            display: none;
-        }
-        
-        .alert-success {
-            background-color: #d4edda;
-            border: 1px solid #c3e6cb;
-            color: #155724;
-        }
     </style>
 </head>
 <body>
@@ -88,39 +61,12 @@
         <a href="/admin/" class="back-link">← Back to Admin Dashboard</a>
         <h1>Form Template: {{ form.formName }}</h1>
         
-        <div id="alert" class="alert"></div>
-        
         <div class="form-info">
             <p><strong>Form ID:</strong> {{ form.formId }}</p>
             <p><strong>Uploaded Date:</strong> {{ form.uploadedDate.strftime('%Y-%m-%d %H:%M:%S') }}</p>
         </div>
         
-        <button class="copy-button" onclick="copyToClipboard()">Copy JSON</button>
         <pre><code>{{ form_data }}</code></pre>
     </div>
-
-    <script>
-        function showAlert(message, type) {
-            const alert = document.getElementById('alert');
-            alert.textContent = message;
-            alert.className = `alert alert-${type}`;
-            alert.style.display = 'block';
-            
-            setTimeout(() => {
-                alert.style.display = 'none';
-            }, 3000);
-        }
-        
-        function copyToClipboard() {
-            const code = document.querySelector('code').textContent;
-            navigator.clipboard.writeText(code)
-                .then(() => {
-                    showAlert('JSON copied to clipboard!', 'success');
-                })
-                .catch(err => {
-                    showAlert('Failed to copy JSON', 'error');
-                });
-        }
-    </script>
 </body>
 </html> 
