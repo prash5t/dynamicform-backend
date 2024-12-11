@@ -23,3 +23,11 @@ class Config:
 
     # Allowed extensions for JSON files
     ALLOWED_EXTENSIONS = {'json'}
+
+    # Add new directory for uploaded documents
+    UPLOADED_DOCUMENTS_DIR = os.path.join(BASE_DIR, 'uploaded_documents')
+
+    # Update allowed extensions
+    ALLOWED_PHOTO_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+    ALLOWED_FILE_EXTENSIONS = {'pdf', 'doc',
+                               'docx', 'txt', 'png', 'jpg', 'jpeg'}

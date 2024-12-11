@@ -6,6 +6,7 @@ from app.models.form import Form
 from app.models.submission import Submission
 from app.models import db
 import uuid
+from app.utils.file_handler import save_uploaded_file
 
 bp = Blueprint('api', __name__)
 
@@ -56,12 +57,9 @@ def submit_form(form_id):
         # Get the form
         form = Form.query.get_or_404(form_id)
 
-        # Load the form template
+        # Load form template
         template_path = os.path.join(
             current_app.config['UPLOAD_FOLDER'], form.formPath)
-        if not os.path.exists(template_path):
-            return create_error_response('Form template not found'), 404
-
         with open(template_path, 'r') as f:
             template = json.load(f)
 
@@ -70,47 +68,60 @@ def submit_form(form_id):
         if not submission_data:
             return create_error_response('No submission data provided'), 400
 
-        # Validate submission against template
+        # Debug print
+        print("Received submission data:", submission_data)
+
+        # Validate submission
         is_valid, error_message = validate_submission(
             template, submission_data)
         if not is_valid:
             return create_error_response(f'Invalid submission: {error_message}'), 400
 
-        # Generate submission ID
+        # Get all file/photo fields from template
+        file_fields = set()
+        for page in template['pages']:
+            for field in page['fields']:
+                if field['type'] in ['file', 'photo']:
+                    file_fields.add(field['key'])
+
+        # Verify file paths exist only for file/photo fields
+        for key, value in submission_data.items():
+            if key in file_fields and isinstance(value, list) and value:
+                print(f"Checking file paths for field {key}:", value)
+                for path in value:
+                    # Check if path exists relative to BASE_DIR
+                    full_path = os.path.join(
+                        current_app.config['BASE_DIR'], path)
+                    print(f"Checking path: {path}")
+                    print(f"Full path: {full_path}")
+                    print(f"Path exists: {os.path.exists(full_path)}")
+                    if not os.path.exists(full_path):
+                        return create_error_response(f'File not found: {path}'), 400
+
+        # Generate submission ID and save
         submission_id = str(uuid.uuid4())
-
-        # Create submissions directory if it doesn't exist
-        os.makedirs(current_app.config['SUBMISSION_FOLDER'], exist_ok=True)
-
-        # Save submission data with submission ID
-        filename = f"{submission_id}.json"
+        submission_path = f"{submission_id}.json"
         file_path = os.path.join(
-            current_app.config['SUBMISSION_FOLDER'], filename)
+            current_app.config['SUBMISSION_FOLDER'], submission_path)
 
-        try:
-            # Save the file first
-            with open(file_path, 'w') as f:
-                json.dump(submission_data, f, indent=2)
+        # Save submission data
+        os.makedirs(current_app.config['SUBMISSION_FOLDER'], exist_ok=True)
+        with open(file_path, 'w') as f:
+            json.dump(submission_data, f, indent=2)
 
-            # Create submission record with the known file path
-            submission = Submission(
-                submissionId=submission_id,
-                formId=form_id,
-                submissionPath=filename
-            )
-            db.session.add(submission)
-            db.session.commit()
+        # Create submission record
+        submission = Submission(
+            submissionId=submission_id,
+            formId=form_id,
+            submissionPath=submission_path
+        )
+        db.session.add(submission)
+        db.session.commit()
 
-            return jsonify({
-                'message': 'Form submitted successfully',
-                'submission': submission.to_dict()
-            }), 201
-
-        except Exception as e:
-            # Clean up the file if database operation fails
-            if os.path.exists(file_path):
-                os.remove(file_path)
-            raise e
+        return jsonify({
+            'message': 'Form submitted successfully',
+            'submission': submission.to_dict()
+        }), 201
 
     except Exception as e:
         db.session.rollback()
@@ -198,3 +209,35 @@ def validate_submission(template, submission_data):
 
     except Exception as e:
         return False, f"Validation error: {str(e)}"
+
+
+@bp.route('/upload', methods=['POST'])
+def upload_file():
+    """
+    Handle file upload and return stored path
+    """
+    try:
+        if 'file' not in request.files:
+            return create_error_response('No file part in the request'), 400
+
+        file = request.files['file']
+        if file.filename == '':
+            return create_error_response('No file selected'), 400
+
+        try:
+            relative_path = save_uploaded_file(file)
+
+            return jsonify({
+                'message': 'File uploaded successfully',
+                'uploadedPath': relative_path
+            }), 201
+
+        except ValueError as ve:
+            return create_error_response(str(ve)), 400
+        except Exception as e:
+            return create_error_response(f"File upload failed: {str(e)}"), 500
+
+    except Exception as e:
+        return create_error_response(
+            f"Upload request failed: {str(e)} (Content-Type: {request.content_type})"
+        ), 500

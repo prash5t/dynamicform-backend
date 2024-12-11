@@ -175,7 +175,7 @@
           "type": "photo",
           "label": "Passport Photo",
           "validation": {
-            "required": true,
+            "required": false,
             "requiredMessage": "Please upload your passport photo",
             "maxSizeInMB": 3.0,
             "maxSizeMessage": "Passport photo cannot exceed 1MB",

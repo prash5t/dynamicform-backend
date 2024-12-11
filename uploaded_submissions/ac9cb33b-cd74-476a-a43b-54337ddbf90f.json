@@ -1,0 +1,52 @@
+{
+  "photo": [
+    "uploaded_documents/6061225b-448f-4724-a439-13f6916eb0a1.png",
+    "uploaded_documents/78159de8-90e8-4e33-9d08-6cffd6d93259.jpg",
+    "uploaded_documents/e5c6f77b-fc01-4215-944b-2226a911f0f3.jpg"
+  ],
+  "firstName": "ridkdkk",
+  "lastName": "sjjsksks",
+  "gender": "M",
+  "genderDescription": null,
+  "profession": "1",
+  "highestEducation": null,
+  "businessValuation": "1000",
+  "jobTitle": null,
+  "dob": "1994-06-15",
+  "file": [
+    "uploaded_documents/5b8da060-2b12-427b-9046-ee01d5f2b905.jpg",
+    "uploaded_documents/b9b115b3-d3b2-4196-a707-959cd550e8b0.jpg",
+    "uploaded_documents/4806a600-de63-4a56-9677-de8647e9b185.jpg",
+    "uploaded_documents/242152e5-542f-4ee7-90d5-03c8714728cb.jpg",
+    "uploaded_documents/5fb2d8e6-671d-409c-99ec-265caaaaba64.jpg"
+  ],
+  "email": "eksjk@kakak.amasm",
+  "phone": "16646467",
+  "hobby": "djjdd",
+  "diet": "1",
+  "non-veg": [
+    "0",
+    "1",
+    "2",
+    "4",
+    "3"
+  ],
+  "drinks": "0",
+  "hobbies": [
+    "reading",
+    "gaming",
+    "cooking"
+  ],
+  "favoriteGames": [
+    "football",
+    "cricket"
+  ],
+  "province": "p3",
+  "district": null,
+  "district_p2": null,
+  "district_p3": "lat",
+  "area_lalitpur": "pulchowk",
+  "area_ktm": null,
+  "streetAddress": "jsjsjsk",
+  "postalCode": "123456"
+}
