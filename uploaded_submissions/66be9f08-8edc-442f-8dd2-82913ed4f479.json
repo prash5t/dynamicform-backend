@@ -1,0 +1,45 @@
+{
+  "photo": [
+    "uploaded_documents/9b622b8f-9a87-4da2-aa9a-9b8561df4c00.jpg",
+    "uploaded_documents/3252df30-eece-4811-aafe-8a9938aede02.png",
+    "uploaded_documents/c1630c3f-ca9a-422c-9028-c745dbcec66e.jpg"
+  ],
+  "firstName": null,
+  "lastName": "fkkfkf",
+  "gender": "O",
+  "genderDescription": "kdkdfk",
+  "profession": "0",
+  "highestEducation": "ms",
+  "businessValuation": null,
+  "jobTitle": null,
+  "dob": "2019-08-15",
+  "file": [
+    "uploaded_documents/782f1243-05c7-411a-866a-19e357147cbb.jpg",
+    "uploaded_documents/c1bc0731-e0da-46b6-8677-83aa9f4b1c35.jpg"
+  ],
+  "email": "jcjd@djkdkd.dkdk",
+  "phone": "6565656",
+  "hobby": null,
+  "diet": "1",
+  "non-veg": [
+    "0"
+  ],
+  "drinks": "0",
+  "hobbies": [
+    "reading",
+    "cooking",
+    "gaming"
+  ],
+  "favoriteGames": [
+    "chess",
+    "football"
+  ],
+  "province": "p3",
+  "district": null,
+  "district_p2": null,
+  "district_p3": "lat",
+  "area_lalitpur": "pulchowk",
+  "area_ktm": null,
+  "streetAddress": "dkdkdk",
+  "postalCode": "512345"
+}
